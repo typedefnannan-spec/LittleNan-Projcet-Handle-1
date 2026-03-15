@@ -1,6 +1,7 @@
 #不传上去的东西
 **/target/
 .idea
+.vscode
 *.iml
 *.class
 *Test.java
