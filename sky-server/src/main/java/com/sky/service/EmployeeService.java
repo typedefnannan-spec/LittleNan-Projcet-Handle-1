@@ -6,10 +6,10 @@ import com.sky.entity.Employee;
 
 public interface EmployeeService {
 
-    //login interface
+    //用户登录
     Employee login(EmployeeLoginDTO employeeLoginDTO);
 
-    //add interface
+    //添加员工信息
     void addEmployee(EmployeeAddDTO employeeAddDTO);
 
 }

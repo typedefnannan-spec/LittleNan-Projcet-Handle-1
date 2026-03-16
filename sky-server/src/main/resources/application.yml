@@ -14,11 +14,11 @@ spring:
       password: ${sky.datasource.password}
 
 mybatis:
-  #Dao config
+  #Dao 配置
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.sky.entity
   configuration:
-    #The camel name
+    #驼峰命名
     map-underscore-to-camel-case: true
 
 logging:
@@ -31,9 +31,9 @@ logging:
 
 sky:
   jwt:
-    #JWT key
+    #JWT令牌密钥
     admin-secret-key: TypedefNan
-    # TTL time
+    #过期时间
     admin-ttl: 7200000
-    # JWT name
+    #JWT请求头名字
     admin-token-name: token

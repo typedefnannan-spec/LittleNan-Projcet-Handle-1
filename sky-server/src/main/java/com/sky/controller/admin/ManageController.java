@@ -15,19 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin/employee")
 @Slf4j
-@Api(tags="Employee API about manage")
+@Api(tags="员工管理API")
 public class ManageController {
 
     @Autowired
     private EmployeeService employeeService;
 
     @PostMapping
-    @ApiOperation("Add employee")
+    @ApiOperation("插入员工")
     public Result<Void> addEmployee(@RequestBody EmployeeAddDTO employeeAddDTO){
-        log.info("Add employee: "+employeeAddDTO);
+        log.info("插入员工信息："+employeeAddDTO);
         employeeService.addEmployee(employeeAddDTO);
         return Result.success();
     }
-
 
 }

@@ -22,49 +22,49 @@ import java.time.LocalDateTime;
 public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
-    private EmployeeDao employeeMapper;
+    private EmployeeDao employeeDao;
 
     @Override
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
-        //Get username and password
+        //获取DTO的用户名和密码
         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();
 
-        //To MD5
+        //将密码转换成MD5加密形式
         password=DigestUtils.md5DigestAsHex(password.getBytes());
 
-        //Select class by username
-        Employee employee = employeeMapper.getByUsername(username);
+        //调用Dao的查询方法
+        Employee employee = employeeDao.getByUsername(username);
 
-        //The Account isn't Exist
+        //如果账号不存在
         if (employee == null) {
-            //Throw exception(Account Not Found)
+            //抛异常（账号不存在）
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
         }
 
-        //Compare the password in MD5
+        //和存储的密码比较（MD5形式）
         if (!password.equals(employee.getPassword())) {
-            //Throw exception(Password Error)
+            //抛异常（密码错误）
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
 
-        //The password is correct but the account is locked
+        //如果密码正确但是存储状态是锁定
         if (employee.getStatus() == StatusConstant.DISABLE) {
-            //Throw exception(Account Locked)
+            //抛异常（账号锁定）
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
         }
 
-        //Accept
+        //通过
         return employee;
     }
 
     @Override
     public void addEmployee(EmployeeAddDTO employeeAddDTO) {
-        //Change to employee class
+        //调用工具类转换成Employee对象
         Employee employee=new Employee();
         BeanUtils.copyProperties(employeeAddDTO,employee);
 
-        //Set others params
+        //设置其他变量
         employee.setStatus(StatusConstant.ENABLE);
         employee.setPassword(PasswordConstant.DEFAULT_PASSWORD);
         employee.setCreateTime(LocalDateTime.now());
@@ -72,8 +72,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //TODO: Create_user and Update_user
 
-        //Insert into database
-        employeeMapper.insertEmployee(employee);
+        //添加进数据库
+        employeeDao.insertEmployee(employee);
     }
 
 }
