@@ -26,6 +26,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //To MD5
         password=DigestUtils.md5DigestAsHex(password.getBytes());
+
         //Select class by username
         Employee employee = employeeMapper.getByUsername(username);
 
