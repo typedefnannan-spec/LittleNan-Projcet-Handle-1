@@ -3,6 +3,7 @@ package com.WM.interceptor;
 import com.WM.constant.JwtClaimsConstant;
 import com.WM.properties.JwtProperties;
 import com.WM.utils.JwtUtil;
+import com.WM.utils.ThreadLocalUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,9 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             log.info("JWT信息："+token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             //获取JWT里面的id字段
-            Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
+            Long employeeId = Long.valueOf(claims.get(JwtClaimsConstant.EMPLOYEE_ID).toString());
+            ThreadLocalUtil.setCurrentId(employeeId);
+            log.info("当前员工Id："+employeeId);
             //通过
             return true;
         } catch (Exception ex) {

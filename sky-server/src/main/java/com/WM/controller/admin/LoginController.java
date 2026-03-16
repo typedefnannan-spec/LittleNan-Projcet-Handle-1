@@ -38,11 +38,9 @@ public class LoginController {
 
         Employee employee = employeeService.login(employeeLoginDTO);
 
-
-
         //创建JWT令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.EMP_ID, employee.getId());
+        claims.put(JwtClaimsConstant.EMPLOYEE_ID, employee.getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),

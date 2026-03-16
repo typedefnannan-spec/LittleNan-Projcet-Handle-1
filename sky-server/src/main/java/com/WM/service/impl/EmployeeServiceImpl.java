@@ -11,6 +11,7 @@ import com.WM.exception.AccountNotFoundException;
 import com.WM.exception.PasswordErrorException;
 import com.WM.dao.EmployeeDao;
 import com.WM.service.EmployeeService;
+import com.WM.utils.ThreadLocalUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,8 +70,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(PasswordConstant.DEFAULT_PASSWORD);
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
-
-        //TODO: Create_user and Update_user
+        employee.setCreateUser(ThreadLocalUtil.getCurrentId());
+        employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
 
         //添加进数据库
         employeeDao.insertEmployee(employee);
