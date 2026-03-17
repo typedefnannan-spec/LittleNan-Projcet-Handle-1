@@ -78,8 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setCreateUser(ThreadLocalUtil.getCurrentId());
         employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
 
-        //添加进数据库
-        employeeDao.insertEmployee(employee);
+        employeeDao.insert(employee);
     }
 
     @Override
@@ -114,6 +113,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置更新参数
         employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
         employee.setUpdateTime(LocalDateTime.now());
+
         employeeDao.update(employee);
     }
 
@@ -126,6 +126,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置更新参数
         employee.setUpdateTime(LocalDateTime.now());
         employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
+
         employeeDao.update(employee);
     }
 

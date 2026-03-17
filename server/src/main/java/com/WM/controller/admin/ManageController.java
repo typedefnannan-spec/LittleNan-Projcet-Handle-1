@@ -61,5 +61,4 @@ public class ManageController {
         return Result.success();
     }
 
-
 }

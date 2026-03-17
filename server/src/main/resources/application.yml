@@ -8,10 +8,10 @@ spring:
     allow-circular-references: true
   datasource:
     druid:
-      driver-class-name: ${sky.datasource.driver-class-name}
-      url: jdbc:mysql://${sky.datasource.host}:${sky.datasource.port}/${sky.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: ${sky.datasource.username}
-      password: ${sky.datasource.password}
+      driver-class-name: ${nan.datasource.driver-class-name}
+      url: jdbc:mysql://${nan.datasource.host}:${nan.datasource.port}/${nan.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${nan.datasource.username}
+      password: ${nan.datasource.password}
 
 mybatis:
   #Dao 配置
@@ -24,12 +24,12 @@ mybatis:
 logging:
   level:
     com:
-      sky:
+      nan:
         mapper: debug
         service: info
         controller: info
 
-sky:
+nan:
   jwt:
     #JWT令牌密钥
     admin-secret-key: TypedefNan

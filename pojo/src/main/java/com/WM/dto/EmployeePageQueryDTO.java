@@ -15,9 +15,8 @@ public class EmployeePageQueryDTO implements Serializable {
     private String name;
 
     @ApiModelProperty("页码")
-    private int page;
+    private Integer page;
 
     @ApiModelProperty("每页显示记录数")
-    private int pageSize;
-
+    private Integer pageSize;
 }

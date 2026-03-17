@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.WM.dao.CategoryDao">
+    <select id="selectPage" resultType="com.WM.entity.Category">
+        select * from category
+        <where>
+            <if test="name!='全部' and name!=null">
+                name like concat("%",#{name},"%")
+            </if>
+            <if test="type!=0 and type!=null">
+                and type=#{type}
+            </if>
+        </where>
+        order by category.sort
+    </select>
+    <update id="update">
+        update category
+        <set>
+            <if test="name!=null">name=#{name},</if>
+            <if test="sort!=null">sort=#{sort},</if>
+            <if test="status!=null">status=#{status},</if>
+            update_time=#{updateTime},update_user=#{updateUser}
+        </set>
+        where id=#{id}
+    </update>
+</mapper>
