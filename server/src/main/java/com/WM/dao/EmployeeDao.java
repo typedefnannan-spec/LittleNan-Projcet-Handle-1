@@ -6,6 +6,7 @@ import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface EmployeeDao {
@@ -19,6 +20,10 @@ public interface EmployeeDao {
             "values(#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{status},#{createTime},#{updateTime})")
     void insertEmployee(Employee employee);
 
+    //查询分页信息
     Page<Employee> selectPage(EmployeePageQueryDTO employeePageQueryDTO);
+
+    //修改员工信息
+    void update(Employee employee);
 
 }

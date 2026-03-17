@@ -16,7 +16,7 @@ spring:
 mybatis:
   #Dao 配置
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.sky.entity
+  type-aliases-package: com.WM.entity
   configuration:
     #驼峰命名
     map-underscore-to-camel-case: true

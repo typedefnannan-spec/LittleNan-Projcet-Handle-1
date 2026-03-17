@@ -99,4 +99,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         return new PageResult(total,result);
     }
 
+    @Override
+    public void updateStatus(Long id,Integer status) {
+        //转换成Employee对象
+        Employee employee=new Employee();
+        employee.setId(id);
+        employee.setStatus(status);
+        employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
+        employee.setUpdateTime(LocalDateTime.now());
+        employeeDao.update(employee);
+    }
+
 }

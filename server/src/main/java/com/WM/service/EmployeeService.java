@@ -17,5 +17,6 @@ public interface EmployeeService {
     //查询分页员工信息
     PageResult selectPage(EmployeePageQueryDTO employeePageQueryDTO);
 
-
+    //修改员工状态
+    void updateStatus(Long id,Integer status);
 }

@@ -22,8 +22,8 @@ public class ManageController {
 
     @PostMapping
     @ApiOperation("插入员工")
-    public Result<Void> add(@RequestBody EmployeeAddDTO employeeAddDTO){
-        log.info("插入员工信息："+employeeAddDTO);
+    public Result<Void> addEmployee(@RequestBody EmployeeAddDTO employeeAddDTO){
+        log.info("插入员工信息：{}", employeeAddDTO);
         employeeService.add(employeeAddDTO);
         return Result.success();
     }
@@ -34,6 +34,14 @@ public class ManageController {
         log.info("查询信息：{}", employeePageQueryDTO);
         PageResult pageResult=employeeService.selectPage(employeePageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    @PostMapping("/status/{status}")
+    @ApiOperation("权限修改")
+    public Result<Void> updateStatus(@PathVariable Integer status,Long id){
+        log.info("修改权限：（员工id：{}，员工状态：{}）",id,status);
+        employeeService.updateStatus(id,status);
+        return Result.success();
     }
 
 
