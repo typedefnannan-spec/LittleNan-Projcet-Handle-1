@@ -1,6 +1,8 @@
 package com.WM.dao;
 
+import com.WM.dto.EmployeePageQueryDTO;
 import com.WM.entity.Employee;
+import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -16,5 +18,7 @@ public interface EmployeeDao {
     @Insert("insert into employee(name,username,password,phone,sex,id_number,status,create_time,update_time) " +
             "values(#{name},#{username},#{password},#{phone},#{sex},#{idNumber},#{status},#{createTime},#{updateTime})")
     void insertEmployee(Employee employee);
+
+    Page<Employee> selectPage(EmployeePageQueryDTO employeePageQueryDTO);
 
 }

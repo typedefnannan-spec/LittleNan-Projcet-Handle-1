@@ -5,19 +5,24 @@ import com.WM.constant.PasswordConstant;
 import com.WM.constant.StatusConstant;
 import com.WM.dto.EmployeeAddDTO;
 import com.WM.dto.EmployeeLoginDTO;
+import com.WM.dto.EmployeePageQueryDTO;
 import com.WM.entity.Employee;
 import com.WM.exception.AccountLockedException;
 import com.WM.exception.AccountNotFoundException;
 import com.WM.exception.PasswordErrorException;
 import com.WM.dao.EmployeeDao;
+import com.WM.result.PageResult;
 import com.WM.service.EmployeeService;
 import com.WM.utils.ThreadLocalUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -60,7 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void addEmployee(EmployeeAddDTO employeeAddDTO) {
+    public void add(EmployeeAddDTO employeeAddDTO) {
         //调用工具类转换成Employee对象
         Employee employee=new Employee();
         BeanUtils.copyProperties(employeeAddDTO,employee);
@@ -75,6 +80,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //添加进数据库
         employeeDao.insertEmployee(employee);
+    }
+
+    @Override
+    public PageResult selectPage(EmployeePageQueryDTO employeePageQueryDTO) {
+        //获取DTO字段信息
+        int page=employeePageQueryDTO.getPage();
+        int pageSize=employeePageQueryDTO.getPageSize();
+
+        //使用分页插件
+        PageHelper.startPage(page,pageSize);
+        Page<Employee> currPage=employeeDao.selectPage(employeePageQueryDTO);
+
+        //将Page对象处理成PageResult
+        List<Employee> result=currPage.getResult();
+        long total=currPage.getTotal();
+
+        return new PageResult(total,result);
     }
 
 }
