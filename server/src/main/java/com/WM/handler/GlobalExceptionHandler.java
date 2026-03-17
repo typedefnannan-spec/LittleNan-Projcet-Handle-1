@@ -15,20 +15,20 @@ public class GlobalExceptionHandler {
 
     //解决所有异常
     @ExceptionHandler
-    public Result exceptionHandler(BaseException ex){
-        log.error("异常日志（所有异常类）："+ex.getMessage());
+    public Result<Void> exceptionHandler(BaseException ex){
+        log.error("异常日志（所有异常类）：{}", ex.getMessage());
         return Result.error(ex.getMessage());
     }
 
     //解决数据库异常
     @ExceptionHandler
-    public Result exceptionHandler(SQLIntegrityConstraintViolationException ex) {
+    public Result<Void> exceptionHandler(SQLIntegrityConstraintViolationException ex) {
         String exInfo=ex.getMessage();
         //异常信息如果包括该字段（重复字段）
         if(exInfo.contains("Duplicate entry")){
             String split[]=exInfo.split(" ");
             String returnMsg=split[2]+MessageConstant.ALREADY_EXISTS;
-            log.error("异常日志（数据库异常类）："+returnMsg);
+            log.error("异常日志（数据库异常类）：{}", returnMsg);
             return Result.error(returnMsg);
         } else{
             //未知错误
@@ -36,6 +36,5 @@ public class GlobalExceptionHandler {
             return Result.error(MessageConstant.UNKNOWN_ERROR);
         }
     }
-
 
 }

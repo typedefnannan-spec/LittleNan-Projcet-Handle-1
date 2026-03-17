@@ -37,7 +37,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             //获取JWT里面的id字段
             Long employeeId = Long.valueOf(claims.get(JwtClaimsConstant.EMPLOYEE_ID).toString());
             ThreadLocalUtil.setCurrentId(employeeId);
-            log.info("当前员工Id："+employeeId);
+            log.info("当前员工Id：{}", employeeId);
             //通过
             return true;
         } catch (Exception ex) {

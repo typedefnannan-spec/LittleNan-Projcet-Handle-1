@@ -1,6 +1,6 @@
 package com.WM.utils;
 
-//ThreadLocal
+//线程工具类
 public class ThreadLocalUtil {
 
     public static ThreadLocal<Long> threadLocal = new ThreadLocal<>();

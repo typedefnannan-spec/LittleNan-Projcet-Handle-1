@@ -31,7 +31,7 @@ public class ManageController {
     @GetMapping("/page")
     @ApiOperation("分页查询")
     public Result<PageResult> selectPage(EmployeePageQueryDTO employeePageQueryDTO){
-        log.info("查询信息："+employeePageQueryDTO);
+        log.info("查询信息：{}", employeePageQueryDTO);
         PageResult pageResult=employeeService.selectPage(employeePageQueryDTO);
         return Result.success(pageResult);
     }
