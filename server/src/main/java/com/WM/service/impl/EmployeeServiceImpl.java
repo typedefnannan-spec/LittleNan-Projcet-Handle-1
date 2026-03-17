@@ -3,7 +3,7 @@ package com.WM.service.impl;
 import com.WM.constant.MessageConstant;
 import com.WM.constant.PasswordConstant;
 import com.WM.constant.StatusConstant;
-import com.WM.dto.EmployeeAddDTO;
+import com.WM.dto.EmployeeDTO;
 import com.WM.dto.EmployeeLoginDTO;
 import com.WM.dto.EmployeePageQueryDTO;
 import com.WM.entity.Employee;
@@ -65,10 +65,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void add(EmployeeAddDTO employeeAddDTO) {
+    public void add(EmployeeDTO employeeDTO) {
         //调用工具类转换成Employee对象
         Employee employee=new Employee();
-        BeanUtils.copyProperties(employeeAddDTO,employee);
+        BeanUtils.copyProperties(employeeDTO,employee);
 
         //设置其他变量
         employee.setStatus(StatusConstant.ENABLE);
@@ -80,6 +80,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //添加进数据库
         employeeDao.insertEmployee(employee);
+    }
+
+    @Override
+    public Employee select(Long id) {
+        return employeeDao.getById(id);
     }
 
     @Override
@@ -105,8 +110,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee=new Employee();
         employee.setId(id);
         employee.setStatus(status);
+
+        //设置更新参数
         employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
         employee.setUpdateTime(LocalDateTime.now());
+        employeeDao.update(employee);
+    }
+
+    @Override
+    public void updateInfo(EmployeeDTO employeeDTO) {
+        //调用工具类转换成Employee对象
+        Employee employee=new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+
+        //设置更新参数
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
         employeeDao.update(employee);
     }
 

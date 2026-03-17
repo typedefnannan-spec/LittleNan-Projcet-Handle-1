@@ -1,7 +1,8 @@
 package com.WM.controller.admin;
 
-import com.WM.dto.EmployeeAddDTO;
+import com.WM.dto.EmployeeDTO;
 import com.WM.dto.EmployeePageQueryDTO;
+import com.WM.entity.Employee;
 import com.WM.result.PageResult;
 import com.WM.result.Result;
 import com.WM.service.EmployeeService;
@@ -21,8 +22,8 @@ public class ManageController {
     private EmployeeService employeeService;
 
     @PostMapping
-    @ApiOperation("插入员工")
-    public Result<Void> addEmployee(@RequestBody EmployeeAddDTO employeeAddDTO){
+    @ApiOperation("员工插入")
+    public Result<Void> addEmployee(@RequestBody EmployeeDTO employeeAddDTO){
         log.info("插入员工信息：{}", employeeAddDTO);
         employeeService.add(employeeAddDTO);
         return Result.success();
@@ -41,6 +42,22 @@ public class ManageController {
     public Result<Void> updateStatus(@PathVariable Integer status,Long id){
         log.info("修改权限：（员工id：{}，员工状态：{}）",id,status);
         employeeService.updateStatus(id,status);
+        return Result.success();
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation("信息回显")
+    public Result<Employee> returnInfo(@PathVariable Long id){
+        Employee employee=employeeService.select(id);
+        log.info("信息回显：（员工id：{}，回显信息：{}）",id,employee);
+        return Result.success(employee);
+    }
+
+    @PutMapping
+    @ApiOperation("信息修改")
+    public Result<Void> updateInfo(@RequestBody EmployeeDTO employeeDTO){
+        log.info("信息修改：{}",employeeDTO);
+        employeeService.updateInfo(employeeDTO);
         return Result.success();
     }
 

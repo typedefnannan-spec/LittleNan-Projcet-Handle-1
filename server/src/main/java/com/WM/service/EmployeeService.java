@@ -1,6 +1,6 @@
 package com.WM.service;
 
-import com.WM.dto.EmployeeAddDTO;
+import com.WM.dto.EmployeeDTO;
 import com.WM.dto.EmployeeLoginDTO;
 import com.WM.dto.EmployeePageQueryDTO;
 import com.WM.entity.Employee;
@@ -12,11 +12,17 @@ public interface EmployeeService {
     Employee login(EmployeeLoginDTO employeeLoginDTO);
 
     //添加员工信息
-    void add(EmployeeAddDTO employeeAddDTO);
+    void add(EmployeeDTO employeeAddDTO);
+
+    //根据id查询员工
+    Employee select(Long id);
 
     //查询分页员工信息
     PageResult selectPage(EmployeePageQueryDTO employeePageQueryDTO);
 
     //修改员工状态
     void updateStatus(Long id,Integer status);
+
+    //修改员工信息
+    void updateInfo(EmployeeDTO employeeDTO);
 }
