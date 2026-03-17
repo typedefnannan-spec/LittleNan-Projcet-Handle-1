@@ -73,10 +73,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置其他变量
         employee.setStatus(StatusConstant.ENABLE);
         employee.setPassword(PasswordConstant.DEFAULT_PASSWORD);
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setCreateUser(ThreadLocalUtil.getCurrentId());
-        employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
 
         employeeDao.insert(employee);
     }
@@ -110,10 +106,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setId(id);
         employee.setStatus(status);
 
-        //设置更新参数
-        employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
-        employee.setUpdateTime(LocalDateTime.now());
-
         employeeDao.update(employee);
     }
 
@@ -122,10 +114,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         //调用工具类转换成Employee对象
         Employee employee=new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);
-
-        //设置更新参数
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(ThreadLocalUtil.getCurrentId());
 
         employeeDao.update(employee);
     }

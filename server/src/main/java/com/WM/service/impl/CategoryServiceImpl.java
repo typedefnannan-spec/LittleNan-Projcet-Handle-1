@@ -8,18 +8,14 @@ import com.WM.dao.SetmealDao;
 import com.WM.dto.CategoryDTO;
 import com.WM.dto.CategoryPageQueryDTO;
 import com.WM.entity.Category;
-import com.WM.entity.Employee;
 import com.WM.exception.DeletionNotAllowedException;
 import com.WM.result.PageResult;
 import com.WM.service.CategoryService;
-import com.WM.utils.ThreadLocalUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -42,10 +38,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         //设置其他变量
         category.setStatus(StatusConstant.DISABLE);
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
-        category.setCreateUser(ThreadLocalUtil.getCurrentId());
-        category.setUpdateUser(ThreadLocalUtil.getCurrentId());
 
         categoryDao.insert(category);
     }
@@ -72,8 +64,6 @@ public class CategoryServiceImpl implements CategoryService {
         Category category=new Category();
         category.setStatus(status);
         category.setId(id);
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(ThreadLocalUtil.getCurrentId());
 
         categoryDao.update(category);
     }
@@ -83,8 +73,6 @@ public class CategoryServiceImpl implements CategoryService {
         //调用工具类转换为Category对象
         Category category=new Category();
         BeanUtils.copyProperties(categoryDTO,category);
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(ThreadLocalUtil.getCurrentId());
 
         categoryDao.update(category);
     }

@@ -1,0 +1,20 @@
+package com.WM.annotation;
+
+import com.WM.enumeration.OperationType;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+//自定义注解，自动填充
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface AutoFill {
+
+    //关于填充的操作
+    OperationType value();
+
+    
+
+}
