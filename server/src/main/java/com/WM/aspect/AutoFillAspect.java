@@ -6,6 +6,7 @@ import com.WM.enumeration.OperationType;
 import com.WM.utils.ThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -25,7 +26,7 @@ public class AutoFillAspect {
     public void autoFillPointCut(){}
 
     @Before("autoFillPointCut()")
-    public void autoFill(JoinPoint joinPoint) throws Exception {
+    public void autoFill(JoinPoint joinPoint) {
         log.info("自动填充");
 
         //获得注解对象
@@ -37,21 +38,29 @@ public class AutoFillAspect {
         //假设对象在第0个位置
         Object obj=args[0];
         if(autoFill.value().equals(OperationType.INSERT)){
+            try {
+                //获得对应方法对象
+                Method setCreateTime = obj.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_TIME, LocalDateTime.class);
+                Method setCreateUser=obj.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_USER,Long.class);
+
+                //通过反射进行赋值
+                setCreateTime.invoke(obj,LocalDateTime.now());
+                setCreateUser.invoke(obj, ThreadLocalUtil.getCurrentId());
+            } catch (Exception e) {
+                log.info("出现异常：{}",e.getMessage());
+            }
+        }
+        try {
             //获得对应方法对象
-            Method setCreateTime=obj.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_TIME, LocalDateTime.class);
-            Method setCreateUser=obj.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_USER,Long.class);
+            Method setUpdateTime = obj.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
+            Method setUpdateUser = obj.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
 
             //通过反射进行赋值
-            setCreateTime.invoke(obj,LocalDateTime.now());
-            setCreateUser.invoke(obj, ThreadLocalUtil.getCurrentId());
+            setUpdateTime.invoke(obj, LocalDateTime.now());
+            setUpdateUser.invoke(obj, ThreadLocalUtil.getCurrentId());
+        } catch (Exception e){
+            log.info("出现异常：{}",e.getMessage());
         }
-        //获得对应方法对象
-        Method setUpdateTime=obj.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
-        Method setUpdateUser=obj.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_USER,Long.class);
-
-        //通过反射进行赋值
-        setUpdateTime.invoke(obj,LocalDateTime.now());
-        setUpdateUser.invoke(obj,ThreadLocalUtil.getCurrentId());
     }
 
 }

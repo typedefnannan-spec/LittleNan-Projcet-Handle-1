@@ -8,6 +8,9 @@ import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface CategoryDao {
@@ -17,6 +20,9 @@ public interface CategoryDao {
     public void insert(Category category);
 
     public Page<Category> selectPage(CategoryPageQueryDTO categoryPageQueryDTO);
+
+    @Select("select * from category")
+    public List<Category> select();
 
     @AutoFill(value = OperationType.UPDATE)
     public void update(Category category);

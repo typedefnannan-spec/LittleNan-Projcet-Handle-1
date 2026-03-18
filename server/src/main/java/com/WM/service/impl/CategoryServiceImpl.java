@@ -43,6 +43,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<Category> select() {
+        return categoryDao.select();
+    }
+
+    @Override
     public PageResult selectPage(CategoryPageQueryDTO categoryPageQueryDTO) {
         //获取DTO字段信息
         int page=categoryPageQueryDTO.getPage();
@@ -52,11 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
         PageHelper.startPage(page,pageSize);
         Page<Category> currPage=categoryDao.selectPage(categoryPageQueryDTO);
 
-        //将Page对象处理成PageResult
-        List<Category> result=currPage.getResult();
-        long total=currPage.getTotal();
-
-        return new PageResult(total,result);
+        return new PageResult(currPage.getTotal(),currPage.getResult());
     }
 
     @Override

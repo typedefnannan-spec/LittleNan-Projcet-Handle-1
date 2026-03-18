@@ -37,3 +37,8 @@ nan:
     admin-ttl: 7200000
     #JWT请求头名字
     admin-token-name: token
+  alioss:
+    endpoint: ${alioss.endpoint}
+    access-key-id: ${alioss.access-key-id}
+    access-key-secret: ${alioss.access-key-secret}
+    bucket-name: ${alioss.bucket-name}

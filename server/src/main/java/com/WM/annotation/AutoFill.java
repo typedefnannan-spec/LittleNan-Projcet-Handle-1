@@ -15,6 +15,4 @@ public @interface AutoFill {
     //关于填充的操作
     OperationType value();
 
-    
-
 }

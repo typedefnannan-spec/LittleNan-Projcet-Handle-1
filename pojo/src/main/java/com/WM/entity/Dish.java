@@ -19,6 +19,7 @@ public class Dish implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    //主键id
     private Long id;
 
     //菜品名称

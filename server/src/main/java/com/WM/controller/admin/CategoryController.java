@@ -2,6 +2,7 @@ package com.WM.controller.admin;
 
 import com.WM.dto.CategoryDTO;
 import com.WM.dto.CategoryPageQueryDTO;
+import com.WM.entity.Category;
 import com.WM.result.PageResult;
 import com.WM.result.Result;
 import com.WM.service.CategoryService;
@@ -11,10 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin/category")
 @Slf4j
-@Api(tags="菜品分类")
+@Api(tags="分类管理API")
 public class CategoryController {
 
     @Autowired
@@ -23,9 +26,16 @@ public class CategoryController {
     @PostMapping
     @ApiOperation("分类插入")
     public Result<Void> addCategory(@RequestBody CategoryDTO categoryDTO){
-        log.info("分类插入：{}",categoryDTO);
+        log.info("插入数据：{}",categoryDTO);
         categoryService.add(categoryDTO);
         return Result.success();
+    }
+
+    @GetMapping("/list")
+    @ApiOperation("分类查询")
+    public Result<List<Category>> selectCategory(){
+        log.info("分类查询");
+        return Result.success(categoryService.select());
     }
 
     @GetMapping("/page")

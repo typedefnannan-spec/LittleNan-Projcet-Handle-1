@@ -92,11 +92,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         PageHelper.startPage(page,pageSize);
         Page<Employee> currPage=employeeDao.selectPage(employeePageQueryDTO);
 
-        //将Page对象处理成PageResult
-        List<Employee> result=currPage.getResult();
-        long total=currPage.getTotal();
-
-        return new PageResult(total,result);
+        return new PageResult(currPage.getTotal(),currPage.getResult());
     }
 
     @Override
