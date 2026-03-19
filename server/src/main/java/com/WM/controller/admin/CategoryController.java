@@ -35,7 +35,7 @@ public class CategoryController {
     @ApiOperation("分类查询")
     public Result<List<Category>> selectCategory(){
         log.info("分类查询");
-        return Result.success(categoryService.select());
+        return Result.success(categoryService.selectAll());
     }
 
     @GetMapping("/page")
@@ -47,9 +47,9 @@ public class CategoryController {
     }
 
     @PostMapping("/status/{status}")
-    @ApiOperation("权限修改")
+    @ApiOperation("状态修改")
     public Result<Void> updateStatus(@PathVariable Integer status,Long id){
-        log.info("权限修改（菜品id：{}，菜品状态：{}）",id,status);
+        log.info("状态修改（分类id：{}，分类状态：{}）",id,status);
         categoryService.updateStatus(id,status);
         return Result.success();
     }

@@ -5,8 +5,10 @@ import com.WM.dto.DishPageQueryDTO;
 import com.WM.result.PageResult;
 import com.WM.result.Result;
 import com.WM.service.DishService;
+import com.WM.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,13 +40,37 @@ public class DishController {
         return Result.success(pageResult);
     }
 
+    @GetMapping("/{id}")
+    @ApiOperation("菜品回显")
+    public Result<DishVO> selectDish(@PathVariable Long id){
+        log.info("菜品回显：{}",id);
+        DishVO dishVo=dishService.select(id);
+        return Result.success(dishVo);
+    }
+
+    @PostMapping("/status/{status}")
+    @ApiOperation("状态修改")
+    public Result<Void> updateStatus(@PathVariable Integer status,Long id){
+        log.info("状态修改（菜品id：{}，菜品状态：{}）",id,status);
+        dishService.updateStatus(id,status);
+        return Result.success();
+    }
+
+    @PutMapping
+    @ApiOperation("菜品修改")
+    public Result<Void> updateDish(@RequestBody DishDTO dishDTO){
+        log.info("菜品修改：{}",dishDTO);
+        dishService.update(dishDTO);
+        return Result.success();
+    }
+
+
     @DeleteMapping
     @ApiOperation("菜品删除")
-    public Result<Void> delete(@RequestParam List<Long> ids){
+    public Result<Void> deleteDish(@RequestParam List<Long> ids){
         log.info("菜品删除：{}",ids);
         dishService.delete(ids);
         return Result.success();
     }
-
 
 }

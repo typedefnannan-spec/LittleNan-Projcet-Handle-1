@@ -10,7 +10,7 @@ import java.util.List;
 public interface CategoryService {
     public void add(CategoryDTO categoryDTO);
 
-    public List<Category> select();
+    public List<Category> selectAll();
 
     public PageResult selectPage(CategoryPageQueryDTO categoryPageQueryDTO);
 

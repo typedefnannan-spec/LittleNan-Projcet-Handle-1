@@ -43,8 +43,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> select() {
-        return categoryDao.select();
+    public List<Category> selectAll() {
+        return categoryDao.selectAll();
     }
 
     @Override

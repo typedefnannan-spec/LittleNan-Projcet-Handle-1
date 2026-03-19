@@ -19,10 +19,13 @@ public interface CategoryDao {
     @AutoFill(value = OperationType.INSERT)
     public void insert(Category category);
 
-    public Page<Category> selectPage(CategoryPageQueryDTO categoryPageQueryDTO);
-
     @Select("select * from category")
-    public List<Category> select();
+    public List<Category> selectAll();
+
+    @Select("select * from category where id=#{id}")
+    public Category select(Long id);
+
+    public Page<Category> selectPage(CategoryPageQueryDTO categoryPageQueryDTO);
 
     @AutoFill(value = OperationType.UPDATE)
     public void update(Category category);

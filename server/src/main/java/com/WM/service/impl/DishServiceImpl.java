@@ -2,9 +2,11 @@ package com.WM.service.impl;
 
 import com.WM.constant.MessageConstant;
 import com.WM.constant.StatusConstant;
+import com.WM.dao.CategoryDao;
 import com.WM.dao.DishDao;
 import com.WM.dao.DishFlavorDao;
 import com.WM.dao.SetmealDishDao;
+import com.WM.dto.CategoryDTO;
 import com.WM.dto.DishDTO;
 import com.WM.dto.DishPageQueryDTO;
 import com.WM.entity.Dish;
@@ -16,12 +18,12 @@ import com.WM.vo.DishVO;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.bridge.Message;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,6 +38,11 @@ public class DishServiceImpl implements DishService {
 
     @Autowired
     private SetmealDishDao setmealDishDao;
+
+    @Autowired
+    private CategoryDao categoryDao;
+    @Autowired
+    private DishService dishService;
 
 
     @Transactional
@@ -53,6 +60,18 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    public DishVO select(Long id) {
+        //调用工具类转换成DishVO对象
+        DishVO dishVO=new DishVO();
+        BeanUtils.copyProperties(dishDao.select(id),dishVO);
+
+        //设置口味参数
+        dishVO.setFlavors(dishFlavorDao.select(id));
+
+        return dishVO;
+    }
+
+    @Override
     public PageResult selectPage(DishPageQueryDTO dishPageQueryDTO) {
         //获取DTO字段信息
         int page=dishPageQueryDTO.getPage();
@@ -64,11 +83,39 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    public void updateStatus(Long id, Integer status) {
+        Dish dish=new Dish();
+        dish.setId(id);
+        dish.setStatus(status);
+
+        dishDao.update(dish);
+    }
+
+    @Transactional
+    @Override
+    public void update(DishDTO dishDTO) {
+        //调用工具类转换成Dish对象
+        Dish dish=new Dish();
+        BeanUtils.copyProperties(dishDTO,dish);
+
+        //获取口味集合
+        List<DishFlavor> dishFlavorList=dishDTO.getFlavors();
+
+        //获取要删除的dishId
+        List<Long> ids=new ArrayList<>();
+        ids.add(dish.getId());
+
+        dishDao.update(dish);
+        dishFlavorDao.delete(ids);
+        dishFlavorDao.insert(dishFlavorList,dish.getId());
+    }
+
+    @Override
     @Transactional
     public void delete(List<Long> ids) {
         //遍历当前菜品
         for (Long aLong : ids) {
-            Dish dish = dishDao.selectById(aLong);
+            Dish dish = dishDao.select(aLong);
             //如果是起售状态
             if (dish.getStatus() == StatusConstant.ENABLE) {
                 //抛不能删除异常
@@ -83,12 +130,7 @@ public class DishServiceImpl implements DishService {
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         }
 
-        for (Long id : ids) {
-            dishDao.deleteById(id);
-            dishFlavorDao.deleteById(id);
-        }
-
+        dishDao.delete(ids);
+        dishFlavorDao.delete(ids);
     }
-
-
 }

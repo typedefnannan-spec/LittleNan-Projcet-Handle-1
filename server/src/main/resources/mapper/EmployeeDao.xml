@@ -5,9 +5,7 @@
     <select id="selectPage" resultType="com.WM.entity.Employee">
         select * from employee
         <where>
-            <if test="name != '全部' and name != null">
-                name like concat("%",#{name},"%")
-            </if>
+            <if test="name != '全部' and name != null">name like concat("%",#{name},"%")</if>
         </where>
         order by create_time desc
     </select>
