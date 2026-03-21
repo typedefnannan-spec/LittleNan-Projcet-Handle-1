@@ -49,7 +49,7 @@ public class CategoryController {
     @PostMapping("/status/{status}")
     @ApiOperation("状态修改")
     public Result<Void> updateStatus(@PathVariable Integer status,Long id){
-        log.info("状态修改（分类id：{}，分类状态：{}）",id,status);
+        log.info("状态修改（分类id：{}，分类状态：{}）",id,status==1?"开放":"不开放");
         categoryService.updateStatus(id,status);
         return Result.success();
     }

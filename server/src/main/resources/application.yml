@@ -1,17 +1,26 @@
 server:
-  port: 9191
+  port: ${nan.server.port}
 
 spring:
   profiles:
     active: dev
+
   main:
     allow-circular-references: true
+
   datasource:
     druid:
       driver-class-name: ${nan.datasource.driver-class-name}
       url: jdbc:mysql://${nan.datasource.host}:${nan.datasource.port}/${nan.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: ${nan.datasource.username}
       password: ${nan.datasource.password}
+
+  redis:
+    host: ${nan.redis.host}
+    port: ${nan.redis.port}
+    password: ${nan.redis.password}
+    database: ${nan.redis.database}
+
 
 mybatis:
   #Dao 配置
@@ -29,16 +38,16 @@ logging:
         service: info
         controller: info
 
-nan:
-  jwt:
-    #JWT令牌密钥
-    admin-secret-key: TypedefNan
-    #过期时间
-    admin-ttl: 7200000
-    #JWT请求头名字
-    admin-token-name: token
-  alioss:
-    endpoint: ${alioss.endpoint}
-    access-key-id: ${alioss.access-key-id}
-    access-key-secret: ${alioss.access-key-secret}
-    bucket-name: ${alioss.bucket-name}
+jwt:
+  #JWT令牌密钥
+  admin-secret-key: ${nan.admin.secret-key}
+  #过期时间
+  admin-ttl: ${nan.admin.ttl}
+  #JWT请求头名字
+  admin-token-name: ${nan.admin.token-name}
+
+alioss:
+  endpoint: ${nan.alioss.endpoint}
+  access-key-id: ${nan.alioss.access-key-id}
+  access-key-secret: ${nan.alioss.access-key-secret}
+  bucket-name: ${nan.alioss.bucket-name}

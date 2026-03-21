@@ -29,22 +29,37 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
-        log.info("Register interceptor");
+        log.info("注册拦截器");
         registry.addInterceptor(jwtTokenAdminInterceptor)
                 .addPathPatterns("/admin/**")
                 .excludePathPatterns("/admin/employee/login");
     }
 
     @Bean
-    public Docket docket() {
+    public Docket docketAdmin() {
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("Little-Nan-Project-Interface")
-                .description("Little-Nan-Project-Interface")
+                .title("小楠外卖接口文档")
                 .build();
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .groupName("管理端接口文档")
                 .apiInfo(apiInfo)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.WM.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.WM.controller.admin"))
+                .paths(PathSelectors.any())
+                .build();
+        return docket;
+    }
+
+    @Bean
+    public Docket docketUser() {
+        ApiInfo apiInfo = new ApiInfoBuilder()
+                .description("小楠外卖接口文档")
+                .build();
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .groupName("用户端接口文档")
+                .apiInfo(apiInfo)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.WM.controller.user"))
                 .paths(PathSelectors.any())
                 .build();
         return docket;

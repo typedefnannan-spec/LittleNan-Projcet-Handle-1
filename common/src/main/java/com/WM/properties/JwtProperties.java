@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 //信息来自application.yml
 @Component
-@ConfigurationProperties(prefix = "nan.jwt")
+@ConfigurationProperties(prefix = "jwt")
 @Data
 public class JwtProperties {
 

@@ -8,7 +8,6 @@ import com.WM.service.DishService;
 import com.WM.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +50,7 @@ public class DishController {
     @PostMapping("/status/{status}")
     @ApiOperation("状态修改")
     public Result<Void> updateStatus(@PathVariable Integer status,Long id){
-        log.info("状态修改（菜品id：{}，菜品状态：{}）",id,status);
+        log.info("状态修改（菜品id：{}，菜品状态：{}）",id,status==1?"开放":"不开放");
         dishService.updateStatus(id,status);
         return Result.success();
     }

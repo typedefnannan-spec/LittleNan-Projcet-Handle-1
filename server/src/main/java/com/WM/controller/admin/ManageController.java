@@ -40,7 +40,7 @@ public class ManageController {
     @PostMapping("/status/{status}")
     @ApiOperation("权限修改")
     public Result<Void> updateStatus(@PathVariable Integer status,Long id){
-        log.info("修改权限：（员工id：{}，员工状态：{}）",id,status);
+        log.info("修改权限：（员工id：{}，员工状态：{}）",id,status==1?"开启":"禁用");
         employeeService.updateStatus(id,status);
         return Result.success();
     }
