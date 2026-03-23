@@ -2,6 +2,7 @@ package com.WM.controller.admin;
 
 import com.WM.dto.DishDTO;
 import com.WM.dto.DishPageQueryDTO;
+import com.WM.entity.Dish;
 import com.WM.result.PageResult;
 import com.WM.result.Result;
 import com.WM.service.DishService;
@@ -31,6 +32,15 @@ public class DishController {
         return Result.success();
     }
 
+    @GetMapping("/list")
+    @ApiOperation("菜品查询（分类id）")
+    public Result<List<Dish>> selectDishBycategoryId(Long categoryId){
+        log.info("菜品查询：{}",categoryId);
+        List<Dish> res=dishService.selectBycategoryId(categoryId);
+        return Result.success(res);
+    }
+
+
     @GetMapping("/page")
     @ApiOperation("分页查询")
     public Result<PageResult> selectPage(DishPageQueryDTO dishPageQueryDTO){
@@ -40,10 +50,10 @@ public class DishController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation("菜品回显")
-    public Result<DishVO> selectDish(@PathVariable Long id){
+    @ApiOperation("菜品回显（主键id）")
+    public Result<DishVO> selectDishById(@PathVariable Long id){
         log.info("菜品回显：{}",id);
-        DishVO dishVo=dishService.select(id);
+        DishVO dishVo=dishService.selectById(id);
         return Result.success(dishVo);
     }
 
@@ -62,7 +72,6 @@ public class DishController {
         dishService.update(dishDTO);
         return Result.success();
     }
-
 
     @DeleteMapping
     @ApiOperation("菜品删除")

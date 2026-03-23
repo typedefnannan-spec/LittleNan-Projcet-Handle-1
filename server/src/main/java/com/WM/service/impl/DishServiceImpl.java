@@ -2,11 +2,9 @@ package com.WM.service.impl;
 
 import com.WM.constant.MessageConstant;
 import com.WM.constant.StatusConstant;
-import com.WM.dao.CategoryDao;
 import com.WM.dao.DishDao;
 import com.WM.dao.DishFlavorDao;
 import com.WM.dao.SetmealDishDao;
-import com.WM.dto.CategoryDTO;
 import com.WM.dto.DishDTO;
 import com.WM.dto.DishPageQueryDTO;
 import com.WM.entity.Dish;
@@ -39,12 +37,6 @@ public class DishServiceImpl implements DishService {
     @Autowired
     private SetmealDishDao setmealDishDao;
 
-    @Autowired
-    private CategoryDao categoryDao;
-    @Autowired
-    private DishService dishService;
-
-
     @Transactional
     @Override
     public void add(DishDTO dishDTO) {
@@ -60,15 +52,20 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public DishVO select(Long id) {
+    public DishVO selectById(Long id) {
         //调用工具类转换成DishVO对象
         DishVO dishVO=new DishVO();
-        BeanUtils.copyProperties(dishDao.select(id),dishVO);
+        BeanUtils.copyProperties(dishDao.selectById(id),dishVO);
 
-        //设置口味参数
+        //设置口味信息
         dishVO.setFlavors(dishFlavorDao.select(id));
 
         return dishVO;
+    }
+
+    @Override
+    public List<Dish> selectBycategoryId(Long categoryId) {
+        return dishDao.selectBycategoryId(categoryId);
     }
 
     @Override
@@ -76,9 +73,11 @@ public class DishServiceImpl implements DishService {
         //获取DTO字段信息
         int page=dishPageQueryDTO.getPage();
         int pageSize=dishPageQueryDTO.getPageSize();
+
         //使用分页插件
         PageHelper.startPage(page,pageSize);
         Page<DishVO> result=dishDao.selectPage(dishPageQueryDTO);
+
         return new PageResult(result.getTotal(),result.getResult());
     }
 
@@ -115,14 +114,15 @@ public class DishServiceImpl implements DishService {
     public void delete(List<Long> ids) {
         //遍历当前菜品
         for (Long aLong : ids) {
-            Dish dish = dishDao.select(aLong);
-            //如果是起售状态
+            Dish dish = dishDao.selectById(aLong);
+
+
             if (dish.getStatus() == StatusConstant.ENABLE) {
                 //抛不能删除异常
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
             }
         }
-        Boolean flag = setmealDishDao.selectByDishId(ids);
+        Boolean flag = setmealDishDao.selectBydishId(ids);
 
         //如果套餐包含该菜品
         if(flag){

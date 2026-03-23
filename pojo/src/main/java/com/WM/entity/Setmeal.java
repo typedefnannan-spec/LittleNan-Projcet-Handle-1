@@ -1,5 +1,7 @@
 package com.WM.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,28 +17,30 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(description = "套餐信息")
 public class Setmeal implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("主键id")
     private Long id;
 
-    //分类id
+    @ApiModelProperty("分类id")
     private Long categoryId;
 
-    //套餐名称
+    @ApiModelProperty("套餐名称")
     private String name;
 
-    //套餐价格
+    @ApiModelProperty("套餐价格")
     private BigDecimal price;
 
-    //状态 0:停用 1:启用
+    @ApiModelProperty("销售状态（0：停售，1：起售）")
     private Integer status;
 
-    //描述信息
+    @ApiModelProperty("描述信息")
     private String description;
 
-    //图片
+    @ApiModelProperty("图片")
     private String image;
 
     private LocalDateTime createTime;

@@ -4,14 +4,14 @@
 <mapper namespace="com.WM.dao.DishDao">
 
     <select id="selectPage" resultType="com.WM.vo.DishVO">
-        select dish.*,category.name categoryName from dish
-        left join category on dish.category_id=category.id
+        select d.*,c.name categoryName from dish d
+        left join category c on d.category_id=c.id
         <where>
-            <if test="name!='全部' and name!=null">and dish.name like concat("%",#{name},"%")</if>
-            <if test="categoryId!=null">and dish.category_id=#{categoryId}</if>
-            <if test="status!=null">and dish.status=#{status}</if>
+            <if test="name!='全部' and name!=null">and d.name like concat("%",#{name},"%")</if>
+            <if test="categoryId!=null">and d.category_id=#{categoryId}</if>
+            <if test="status!=null">and d.status=#{status}</if>
         </where>
-        order by dish.update_time desc
+        order by d.update_time desc
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
@@ -34,7 +34,7 @@
 
     <delete id="delete">
         delete from dish where id in
-        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>

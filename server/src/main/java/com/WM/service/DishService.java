@@ -2,6 +2,7 @@ package com.WM.service;
 
 import com.WM.dto.DishDTO;
 import com.WM.dto.DishPageQueryDTO;
+import com.WM.entity.Dish;
 import com.WM.result.PageResult;
 import com.WM.vo.DishVO;
 
@@ -11,7 +12,9 @@ public interface DishService {
 
     public void add(DishDTO dishDTO);
 
-    public DishVO select(Long id);
+    public DishVO selectById(Long id);
+
+    public List<Dish> selectBycategoryId(Long categoryId);
 
     public PageResult selectPage(DishPageQueryDTO dishPageQueryDTO);
 

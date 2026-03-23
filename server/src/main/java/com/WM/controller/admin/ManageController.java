@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin/employee")
-@Slf4j
 @Api(tags="员工管理API")
+@Slf4j
 public class ManageController {
 
     @Autowired

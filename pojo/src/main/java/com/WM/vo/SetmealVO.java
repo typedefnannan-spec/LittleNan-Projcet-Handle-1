@@ -1,6 +1,9 @@
 package com.WM.vo;
 
 import com.WM.entity.SetmealDish;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,34 +18,36 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(description = "传递套餐对象")
 public class SetmealVO implements Serializable {
 
+    @ApiModelProperty("主键id")
     private Long id;
 
-    //分类id
+    @ApiModelProperty("分类id")
     private Long categoryId;
 
-    //套餐名称
+    @ApiModelProperty("套餐名称")
     private String name;
 
-    //套餐价格
+    @ApiModelProperty("套餐价格")
     private BigDecimal price;
 
-    //状态 0:停用 1:启用
+    @ApiModelProperty("销售状态（0：停售，1：起售）")
     private Integer status;
 
-    //描述信息
+    @ApiModelProperty("描述信息")
     private String description;
 
-    //图片
+    @ApiModelProperty("图片")
     private String image;
 
-    //更新时间
+    @ApiModelProperty("更新时间")
     private LocalDateTime updateTime;
 
-    //分类名称
+    @ApiModelProperty("分类名称")
     private String categoryName;
 
-    //套餐和菜品的关联关系
+    @ApiModelProperty("套餐和菜品的关联关系")
     private List<SetmealDish> setmealDishes = new ArrayList<>();
 }

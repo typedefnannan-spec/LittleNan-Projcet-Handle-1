@@ -14,7 +14,10 @@ import java.util.List;
 public interface DishDao {
 
     @Select("select * from dish where id=#{id}")
-    public Dish select(Long id);
+    public Dish selectById(Long id);
+
+    @Select("select * from dish where category_id=#{categoryId}")
+    public List<Dish> selectBycategoryId(Long categoryId);
 
     public Page<DishVO> selectPage(DishPageQueryDTO dishPageQueryDTO);
 
