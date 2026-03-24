@@ -121,7 +121,7 @@ public class DishServiceImpl implements DishService {
         ids.add(dish.getId());
         dishDao.update(dish);
         dishFlavorDao.delete(ids);
-        dishFlavorDao.insert(dishFlavorList,dish.getId());
+        if(!dishFlavorList.isEmpty()) dishFlavorDao.insert(dishFlavorList,dish.getId());
     }
 
     @Override

@@ -34,9 +34,7 @@ public class LoginController {
     @ApiOperation("微信登录")
     public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO){
         log.info("微信登录：{}",userLoginDTO);
-
         User user=userService.login(userLoginDTO);
-
         //创建JWT令牌
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID,user.getId());
@@ -44,13 +42,11 @@ public class LoginController {
                 jwtProperties.getUserSecretKey(),
                 jwtProperties.getUserTtl(),
                 claims);
-
         UserLoginVO userLoginVO = UserLoginVO.builder()
                 .id(user.getId())
                 .openid(user.getOpenid())
                 .token(token)
                 .build();
-
         return Result.success(userLoginVO);
     }
 }

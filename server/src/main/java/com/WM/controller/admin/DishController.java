@@ -1,5 +1,6 @@
 package com.WM.controller.admin;
 
+import com.WM.constant.RedisConstant;
 import com.WM.dto.DishDTO;
 import com.WM.dto.DishPageQueryDTO;
 import com.WM.entity.Dish;
@@ -11,9 +12,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController("AdminDishController")
 @RequestMapping("/admin/dish")
@@ -24,11 +27,20 @@ public class DishController {
     @Autowired
     private DishService dishService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    private void cleanRedis(String pattern){
+        Set keys=redisTemplate.keys(pattern);
+        redisTemplate.delete(keys);
+    }
+
     @PostMapping
     @ApiOperation("菜品新增")
     public Result<Void> addDish(@RequestBody DishDTO dishDTO){
         log.info("菜品新增：{}",dishDTO);
         dishService.add(dishDTO);
+        cleanRedis(RedisConstant.DISH_NAME_PREFIX+dishDTO.getCategoryId());
         return Result.success();
     }
 
@@ -41,7 +53,6 @@ public class DishController {
         List<Dish> res=dishService.select(dish);
         return Result.success(res);
     }
-
 
     @GetMapping("/page")
     @ApiOperation("分页查询")
@@ -64,6 +75,7 @@ public class DishController {
     public Result<Void> updateStatus(@PathVariable Integer status,Long id){
         log.info("状态修改（菜品id：{}，菜品状态：{}）",id,status==1?"起售":"停售");
         dishService.updateStatus(id,status);
+        cleanRedis(RedisConstant.DISH_NAME_PREFIX+"*");
         return Result.success();
     }
 
@@ -72,6 +84,7 @@ public class DishController {
     public Result<Void> updateDish(@RequestBody DishDTO dishDTO){
         log.info("菜品修改：{}",dishDTO);
         dishService.update(dishDTO);
+        cleanRedis(RedisConstant.DISH_NAME_PREFIX+"*");
         return Result.success();
     }
 
@@ -80,6 +93,7 @@ public class DishController {
     public Result<Void> deleteDish(@RequestParam List<Long> ids){
         log.info("菜品删除：{}",ids);
         dishService.delete(ids);
+        cleanRedis(RedisConstant.DISH_NAME_PREFIX+"*");
         return Result.success();
     }
 
