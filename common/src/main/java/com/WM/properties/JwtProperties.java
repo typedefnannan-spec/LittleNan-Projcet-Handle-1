@@ -10,10 +10,12 @@ import org.springframework.stereotype.Component;
 @Data
 public class JwtProperties {
 
+    //管理端配置
     private String adminSecretKey;
     private long adminTtl;
     private String adminTokenName;
 
+    //用户端配置
     private String userSecretKey;
     private long userTtl;
     private String userTokenName;

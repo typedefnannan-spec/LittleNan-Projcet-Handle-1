@@ -42,10 +42,8 @@ public class HttpClientUtil {
             URI uri = builder.build();
             //创建GET请求
             HttpGet httpGet = new HttpGet(uri);
-
             //发送请求
             response = httpClient.execute(httpGet);
-
             //判断响应状态
             if(response.getStatusLine().getStatusCode() == 200){
                 result = EntityUtils.toString(response.getEntity(),"UTF-8");
@@ -60,7 +58,6 @@ public class HttpClientUtil {
                 log.error(e.getMessage());
             }
         }
-
         return result;
     }
 
@@ -70,11 +67,9 @@ public class HttpClientUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
         String resultString = "";
-
         try {
             //创建POST请求
             HttpPost httpPost = new HttpPost(url);
-
             //创建参数列表
             if (paramMap != null) {
                 List<NameValuePair> paramList = new ArrayList();
@@ -86,10 +81,8 @@ public class HttpClientUtil {
                 httpPost.setEntity(entity);
             }
             httpPost.setConfig(builderRequestConfig());
-
             //执行http请求
             response = httpClient.execute(httpPost);
-
             resultString = EntityUtils.toString(response.getEntity(), "UTF-8");
         } catch (Exception e) {
             throw e;
@@ -100,7 +93,6 @@ public class HttpClientUtil {
                 e.printStackTrace();
             }
         }
-
         return resultString;
     }
 
@@ -120,16 +112,13 @@ public class HttpClientUtil {
                     jsonObject.put(param.getKey(),param.getValue());
                 }
                 StringEntity entity = new StringEntity(jsonObject.toString(),"utf-8");
-
                 //设置请求编码
                 entity.setContentEncoding("utf-8");
-
                 //设置数据类型
                 entity.setContentType("application/json");
                 httpPost.setEntity(entity);
             }
             httpPost.setConfig(builderRequestConfig());
-
             //执行http请求
             response = httpClient.execute(httpPost);
             resultString = EntityUtils.toString(response.getEntity(), "UTF-8");

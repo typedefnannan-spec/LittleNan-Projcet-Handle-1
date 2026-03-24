@@ -12,9 +12,11 @@ public interface DishService {
 
     public void add(DishDTO dishDTO);
 
-    public DishVO selectById(Long id);
+    public List<Dish> select(Dish dish);
 
-    public List<Dish> selectBycategoryId(Long categoryId);
+    public DishVO selectWithFlavorById(Long id);
+
+    public List<DishVO> selectWithFlavor(Dish dish);
 
     public PageResult selectPage(DishPageQueryDTO dishPageQueryDTO);
 

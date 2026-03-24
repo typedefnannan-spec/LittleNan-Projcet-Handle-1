@@ -45,9 +45,20 @@ jwt:
   admin-ttl: ${nan.admin.ttl}
   #JWT请求头名字
   admin-token-name: ${nan.admin.token-name}
+  #JWT令牌密钥
+  user-secret-key: ${nan.user.secret-key}
+  #过期时间
+  user-ttl: ${nan.user.ttl}
+  #JWT请求头名字
+  user-token-name: ${nan.user.token-name}
+
 
 alioss:
   endpoint: ${nan.alioss.endpoint}
   access-key-id: ${nan.alioss.access-key-id}
   access-key-secret: ${nan.alioss.access-key-secret}
   bucket-name: ${nan.alioss.bucket-name}
+
+wechat:
+  appid: ${nan.wechat.appid}
+  secret: ${nan.wechat.secret}

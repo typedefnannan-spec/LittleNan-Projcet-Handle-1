@@ -7,13 +7,21 @@
         values(#{categoryId},#{name},#{price},#{status},#{description},#{image},#{createTime},#{updateTime},#{createUser},#{updateUser})
     </insert>
 
+    <select id="select" resultType="com.WM.entity.Setmeal">
+        select * from setmeal
+        <where>
+            <if test="categoryId!=null">and category_id=#{categoryId}</if>
+            <if test="status!=null">and status=#{status}</if>
+        </where>
+    </select>
+
     <select id="selectPage" resultType="com.WM.vo.SetmealVO">
         select s.*,c.name categoryName from setmeal s
             left join category c on s.category_id=c.id
         <where>
-            <if test="name!='全部' and name!=null">s.name=#{name} and</if>
-            <if test="categoryId!=null">s.category_id=#{categoryId} and </if>
-            <if test="status!=null">s.status=#{status}</if>
+            <if test="name!='全部' and name!=null">and s.name=#{name}</if>
+            <if test="categoryId!=null">and s.category_id=#{categoryId}</if>
+            <if test="status!=null">and s.status=#{status}</if>
         </where>
     </select>
 
@@ -38,5 +46,19 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="countBydishId" resultType="Integer">
+        select count(*) from setmeal s1
+        left join setmeal_dish s2 on s1.id=s2.setmeal_id
+        where s2.dish_id=#{dishId} and s1.status=#{status}
+    </select>
+
+    <select id="countSelectMethod" resultType="Integer">
+        select count(*) from setmeal
+        <where>
+            <if test="categoryId!=null">and category_id=#{categoryId}</if>
+            <if test="status!=null">and status=#{status}</if>
+        </where>
+    </select>
 
 </mapper>

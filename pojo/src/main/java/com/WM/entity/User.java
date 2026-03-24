@@ -1,5 +1,7 @@
 package com.WM.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,30 +14,31 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(description="微信用户信息")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("主键id")
     private Long id;
 
-    //微信用户唯一标识
+    @ApiModelProperty("唯一标识")
     private String openid;
 
-    //姓名
+    @ApiModelProperty("姓名")
     private String name;
 
-    //手机号
+    @ApiModelProperty("电话号码")
     private String phone;
 
-    //性别 0 女 1 男
+    @ApiModelProperty("性别（0：女，1：男）")
     private String sex;
 
-    //身份证号
+    @ApiModelProperty("身份证")
     private String idNumber;
 
-    //头像
+    @ApiModelProperty("头像")
     private String avatar;
 
-    //注册时间
     private LocalDateTime createTime;
 }

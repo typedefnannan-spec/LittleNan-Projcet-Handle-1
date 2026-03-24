@@ -13,16 +13,15 @@ import java.util.List;
 @Mapper
 public interface DishDao {
 
+    @AutoFill(value = OperationType.INSERT)
+    public Integer insert(Dish dish);
+
+    public List<Dish> select(Dish dish);
+
     @Select("select * from dish where id=#{id}")
     public Dish selectById(Long id);
 
-    @Select("select * from dish where category_id=#{categoryId}")
-    public List<Dish> selectBycategoryId(Long categoryId);
-
     public Page<DishVO> selectPage(DishPageQueryDTO dishPageQueryDTO);
-
-    @AutoFill(value = OperationType.INSERT)
-    public Integer insert(Dish dish);
 
     @AutoFill(value = OperationType.UPDATE)
     public void update(Dish dish);
@@ -31,5 +30,8 @@ public interface DishDao {
 
     @Select("select count(*) from dish where category_id=#{category_id}")
     public Integer countByCategoryId(Long category_id);
+
+    public Integer countSelectMethod(Dish dish);
+
 
 }

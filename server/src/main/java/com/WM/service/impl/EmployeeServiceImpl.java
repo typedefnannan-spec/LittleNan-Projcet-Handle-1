@@ -35,32 +35,19 @@ public class EmployeeServiceImpl implements EmployeeService {
         //获取DTO的用户名和密码
         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();
-
         //将密码转换成MD5加密形式
         password=DigestUtils.md5DigestAsHex(password.getBytes());
-
         //调用Dao的查询方法
-        Employee employee = employeeDao.getByUsername(username);
-
+        Employee employee = employeeDao.selectByUsername(username);
         //如果账号不存在
-        if (employee == null) {
-            //抛异常（账号不存在）
+        if (employee == null)
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
-        }
-
         //和存储的密码比较（MD5形式）
-        if (!password.equals(employee.getPassword())) {
-            //抛异常（密码错误）
+        if (!password.equals(employee.getPassword()))
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
-        }
-
         //如果密码正确但是存储状态是锁定
-        if (employee.getStatus() == StatusConstant.DISABLE) {
-            //抛异常（账号锁定）
+        if (employee.getStatus() == StatusConstant.DISABLE)
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
-        }
-
-        //通过
         return employee;
     }
 
@@ -69,17 +56,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         //调用工具类转换成Employee对象
         Employee employee=new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);
-
         //设置其他变量
         employee.setStatus(StatusConstant.ENABLE);
         employee.setPassword(PasswordConstant.DEFAULT_PASSWORD);
-
         employeeDao.insert(employee);
     }
 
     @Override
     public Employee select(Long id) {
-        return employeeDao.getById(id);
+        return employeeDao.selectById(id);
     }
 
     @Override
@@ -87,11 +72,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         //获取DTO字段信息
         int page=employeePageQueryDTO.getPage();
         int pageSize=employeePageQueryDTO.getPageSize();
-
         //使用分页插件
         PageHelper.startPage(page,pageSize);
         Page<Employee> currPage=employeeDao.selectPage(employeePageQueryDTO);
-
         return new PageResult(currPage.getTotal(),currPage.getResult());
     }
 
@@ -101,7 +84,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee=new Employee();
         employee.setId(id);
         employee.setStatus(status);
-
         employeeDao.update(employee);
     }
 
@@ -110,7 +92,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         //调用工具类转换成Employee对象
         Employee employee=new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);
-
         employeeDao.update(employee);
     }
 

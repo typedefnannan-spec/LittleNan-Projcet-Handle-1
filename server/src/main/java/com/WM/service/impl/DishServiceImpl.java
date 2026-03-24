@@ -4,6 +4,7 @@ import com.WM.constant.MessageConstant;
 import com.WM.constant.StatusConstant;
 import com.WM.dao.DishDao;
 import com.WM.dao.DishFlavorDao;
+import com.WM.dao.SetmealDao;
 import com.WM.dao.SetmealDishDao;
 import com.WM.dto.DishDTO;
 import com.WM.dto.DishPageQueryDTO;
@@ -36,6 +37,8 @@ public class DishServiceImpl implements DishService {
 
     @Autowired
     private SetmealDishDao setmealDishDao;
+    @Autowired
+    private SetmealDao setmealDao;
 
     @Transactional
     @Override
@@ -43,29 +46,41 @@ public class DishServiceImpl implements DishService {
         //调用工具类转换成Dish对象
         Dish dish=new Dish();
         BeanUtils.copyProperties(dishDTO,dish);
-
         //获取菜品口味集合
         List<DishFlavor> dishFlavorList=dishDTO.getFlavors();
-
         dishDao.insert(dish);
         dishFlavorDao.insert(dishFlavorList,dish.getId());
     }
 
     @Override
-    public DishVO selectById(Long id) {
+    public List<Dish> select(Dish dish) {
+        return dishDao.select(dish);
+    }
+
+    @Override
+    public DishVO selectWithFlavorById(Long id) {
         //调用工具类转换成DishVO对象
         DishVO dishVO=new DishVO();
         BeanUtils.copyProperties(dishDao.selectById(id),dishVO);
-
         //设置口味信息
         dishVO.setFlavors(dishFlavorDao.select(id));
-
         return dishVO;
     }
 
     @Override
-    public List<Dish> selectBycategoryId(Long categoryId) {
-        return dishDao.selectBycategoryId(categoryId);
+    public List<DishVO> selectWithFlavor(Dish dish) {
+        List<Dish> dishes=dishDao.select(dish);
+        List<DishVO> dishVOS=new ArrayList<>();
+        //遍历菜品
+        for (Dish value : dishes) {
+            //调用工具类转换成DishVO对象
+            DishVO dishVO = new DishVO();
+            BeanUtils.copyProperties(value, dishVO);
+            //设置口味信息
+            dishVO.setFlavors(dishFlavorDao.select(value.getId()));
+            dishVOS.add(dishVO);
+        }
+        return dishVOS;
     }
 
     @Override
@@ -73,20 +88,23 @@ public class DishServiceImpl implements DishService {
         //获取DTO字段信息
         int page=dishPageQueryDTO.getPage();
         int pageSize=dishPageQueryDTO.getPageSize();
-
         //使用分页插件
         PageHelper.startPage(page,pageSize);
         Page<DishVO> result=dishDao.selectPage(dishPageQueryDTO);
-
         return new PageResult(result.getTotal(),result.getResult());
     }
 
     @Override
     public void updateStatus(Long id, Integer status) {
+        //需要停售时需要判断是否存在套餐起售但是需要停售菜品
+        if(status==StatusConstant.DISABLE){
+            Integer count=setmealDao.countBydishId(id,StatusConstant.ENABLE);
+            if(count!=0)
+                throw new DeletionNotAllowedException(MessageConstant.DISH_DISABLE_FAILED);
+        }
         Dish dish=new Dish();
         dish.setId(id);
         dish.setStatus(status);
-
         dishDao.update(dish);
     }
 
@@ -96,14 +114,11 @@ public class DishServiceImpl implements DishService {
         //调用工具类转换成Dish对象
         Dish dish=new Dish();
         BeanUtils.copyProperties(dishDTO,dish);
-
         //获取口味集合
         List<DishFlavor> dishFlavorList=dishDTO.getFlavors();
-
         //获取要删除的dishId
         List<Long> ids=new ArrayList<>();
         ids.add(dish.getId());
-
         dishDao.update(dish);
         dishFlavorDao.delete(ids);
         dishFlavorDao.insert(dishFlavorList,dish.getId());
@@ -115,21 +130,13 @@ public class DishServiceImpl implements DishService {
         //遍历当前菜品
         for (Long aLong : ids) {
             Dish dish = dishDao.selectById(aLong);
-
-
-            if (dish.getStatus() == StatusConstant.ENABLE) {
-                //抛不能删除异常
+            if (dish.getStatus() == StatusConstant.ENABLE)
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
-            }
         }
-        Boolean flag = setmealDishDao.selectBydishId(ids);
-
+        Integer flag = setmealDishDao.countBydishId(ids);
         //如果套餐包含该菜品
-        if(flag){
-            //抛不能删除异常
+        if(flag!=0)
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
-        }
-
         dishDao.delete(ids);
         dishFlavorDao.delete(ids);
     }

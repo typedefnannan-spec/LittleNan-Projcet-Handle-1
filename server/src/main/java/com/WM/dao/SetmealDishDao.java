@@ -1,9 +1,7 @@
 package com.WM.dao;
 
-import com.WM.annotation.AutoFill;
 import com.WM.entity.SetmealDish;
-import com.WM.enumeration.OperationType;
-import org.apache.ibatis.annotations.Delete;
+import com.WM.vo.DishItemVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -14,11 +12,13 @@ public interface SetmealDishDao {
 
     public void insert(List<SetmealDish> dishes,Long Id);
 
-    public Boolean selectBydishId(List<Long> ids);
+    public List<DishItemVO> selectDishBysetmealId(Long setmealId);
 
     @Select("select * from setmeal_dish where setmeal_id=#{setmealId}")
     public List<SetmealDish> selectBysetmealId(Long setmealId);
 
     public void delete(List<Long> ids);
+
+    public Integer countBydishId(List<Long> ids);
 
 }

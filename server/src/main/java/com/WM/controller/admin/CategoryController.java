@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController("AdminCategoryController")
 @RequestMapping("/admin/category")
 @Api(tags="分类管理API")
 @Slf4j
@@ -33,9 +33,9 @@ public class CategoryController {
 
     @GetMapping("/list")
     @ApiOperation("分类查询")
-    public Result<List<Category>> selectCategory(){
-        log.info("分类查询");
-        return Result.success(categoryService.selectAll());
+    public Result<List<Category>> selectCategory(Integer type) {
+        log.info("分类查询：{}", type == null ? "全部" : (type == 0 ? "菜品" : "套餐"));
+        return Result.success(categoryService.select(type));
     }
 
     @GetMapping("/page")
@@ -49,7 +49,7 @@ public class CategoryController {
     @PostMapping("/status/{status}")
     @ApiOperation("状态修改")
     public Result<Void> updateStatus(@PathVariable Integer status,Long id){
-        log.info("状态修改（分类id：{}，分类状态：{}）",id,status==1?"开放":"不开放");
+        log.info("状态修改（分类id：{}，分类状态：{}）",id,status==1?"启用":"停用");
         categoryService.updateStatus(id,status);
         return Result.success();
     }

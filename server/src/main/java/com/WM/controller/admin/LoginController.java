@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
+@RestController("adminLoginController")
 @RequestMapping("/admin/employee")
 @Api(tags="员工登录API")
 @Slf4j

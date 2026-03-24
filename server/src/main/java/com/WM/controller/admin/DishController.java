@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController("AdminDishController")
 @RequestMapping("/admin/dish")
 @Api(tags = "菜品管理API")
 @Slf4j
@@ -36,7 +36,9 @@ public class DishController {
     @ApiOperation("菜品查询（分类id）")
     public Result<List<Dish>> selectDishBycategoryId(Long categoryId){
         log.info("菜品查询：{}",categoryId);
-        List<Dish> res=dishService.selectBycategoryId(categoryId);
+        Dish dish=new Dish();
+        dish.setCategoryId(categoryId);
+        List<Dish> res=dishService.select(dish);
         return Result.success(res);
     }
 
@@ -53,14 +55,14 @@ public class DishController {
     @ApiOperation("菜品回显（主键id）")
     public Result<DishVO> selectDishById(@PathVariable Long id){
         log.info("菜品回显：{}",id);
-        DishVO dishVo=dishService.selectById(id);
+        DishVO dishVo=dishService.selectWithFlavorById(id);
         return Result.success(dishVo);
     }
 
     @PostMapping("/status/{status}")
     @ApiOperation("状态修改")
     public Result<Void> updateStatus(@PathVariable Integer status,Long id){
-        log.info("状态修改（菜品id：{}，菜品状态：{}）",id,status==1?"开放":"不开放");
+        log.info("状态修改（菜品id：{}，菜品状态：{}）",id,status==1?"起售":"停售");
         dishService.updateStatus(id,status);
         return Result.success();
     }
