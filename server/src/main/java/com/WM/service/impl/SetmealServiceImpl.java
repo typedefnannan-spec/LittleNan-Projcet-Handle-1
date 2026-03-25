@@ -84,13 +84,11 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     public void updateStatus(Long id, Integer status) {
-        //如果要起售
+        //判断是否存在菜品停售
         if(status==StatusConstant.ENABLE) {
             List<SetmealDish> setmealDishes = setmealDishDao.selectBysetmealId(id);
             for (SetmealDish setmealDish : setmealDishes) {
-                //获取当前菜品
                 Dish dish = dishDao.selectById(setmealDish.getDishId());
-                //如果是停售状态
                 if (dish.getStatus() == StatusConstant.DISABLE)
                     throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ENABLE_FAILED);
             }
@@ -118,10 +116,9 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     public void delete(List<Long> ids) {
-        //遍历当前套餐
+        //判断套餐是否存在起售状态
         for (Long id : ids) {
             Setmeal setmeal = setmealDao.selectById(id);
-            //如果是起售状态
             if (setmeal.getStatus() == StatusConstant.ENABLE)
                 throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
         }

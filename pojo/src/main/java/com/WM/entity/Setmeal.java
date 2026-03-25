@@ -10,9 +10,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * 套餐
- */
 @Data
 @Builder
 @NoArgsConstructor

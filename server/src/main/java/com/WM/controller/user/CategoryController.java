@@ -23,7 +23,6 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-
     @GetMapping("/list")
     @ApiOperation("分类查询")
     public Result<List<Category>> selectCategory(Integer type){

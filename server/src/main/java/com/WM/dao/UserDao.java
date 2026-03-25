@@ -9,7 +9,6 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserDao {
 
-    @AutoFill(value = OperationType.INSERT)
     public void insert(User user);
 
     @Select("select * from user where openid=#{openid}")

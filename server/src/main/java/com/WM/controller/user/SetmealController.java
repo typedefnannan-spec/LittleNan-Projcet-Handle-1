@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,7 @@ public class SetmealController {
 
     @GetMapping("/list")
     @ApiOperation("套餐查询")
+    @Cacheable(cacheNames = "SETMEAL",key="#categoryId")
     public Result<List<Setmeal>> list(Long categoryId) {
         log.info("套餐查询：{}",categoryId);
         Setmeal setmeal = new Setmeal();

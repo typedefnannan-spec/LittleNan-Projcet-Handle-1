@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
         //调用工具类转换成Category对象
         Category category=new Category();
         BeanUtils.copyProperties(categoryDTO,category);
-        //设置其他变量
+        //设置状态信息
         category.setStatus(StatusConstant.DISABLE);
         categoryDao.insert(category);
     }
