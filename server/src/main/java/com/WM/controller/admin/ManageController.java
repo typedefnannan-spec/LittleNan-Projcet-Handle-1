@@ -57,7 +57,7 @@ public class ManageController {
     @ApiOperation("信息修改")
     public Result<Void> updateInfo(@RequestBody EmployeeDTO employeeDTO){
         log.info("信息修改：{}",employeeDTO);
-        employeeService.updateInfo(employeeDTO);
+        employeeService.update(employeeDTO);
         return Result.success();
     }
 

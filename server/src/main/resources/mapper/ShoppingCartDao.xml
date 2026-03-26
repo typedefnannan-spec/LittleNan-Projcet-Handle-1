@@ -33,4 +33,13 @@
         where id=#{id}
     </update>
 
+    <delete id="deleteById">
+        delete from shopping_cart where id=#{id}
+    </delete>
+
+
+    <delete id="deleteAll">
+        delete from shopping_cart where user_id=#{userId}
+    </delete>
+
 </mapper>

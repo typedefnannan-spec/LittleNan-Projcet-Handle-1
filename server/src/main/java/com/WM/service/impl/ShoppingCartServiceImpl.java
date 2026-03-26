@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -61,9 +60,29 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
+    public void sub(ShoppingCartDTO shoppingCartDTO) {
+        //调用工具类转换成ShoppingCart对象
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+        shoppingCart.setUserId(ThreadLocalUtil.getCurrentId());
+        List<ShoppingCart> shoppingCartList = shoppingCartDao.select(shoppingCart);
+        ShoppingCart shoppingCart0 = shoppingCartList.get(0);
+        if (shoppingCart0.getNumber() == 1) shoppingCartDao.deleteById(shoppingCart0.getId());
+        else {
+            shoppingCart0.setNumber(shoppingCart0.getNumber() - 1);
+            shoppingCartDao.update(shoppingCart0);
+        }
+    }
+
+    @Override
     public List<ShoppingCart> select(Long id) {
         ShoppingCart shoppingCart=new ShoppingCart();
         shoppingCart.setUserId(id);
         return shoppingCartDao.select(shoppingCart);
+    }
+
+    @Override
+    public void deleteAll(Long id) {
+        shoppingCartDao.deleteAll(id);
     }
 }

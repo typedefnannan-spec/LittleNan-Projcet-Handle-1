@@ -87,7 +87,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void updateInfo(CategoryDTO categoryDTO) {
+    public void update(CategoryDTO categoryDTO) {
         //调用工具类转换为Category对象
         Category category=new Category();
         BeanUtils.copyProperties(categoryDTO,category);

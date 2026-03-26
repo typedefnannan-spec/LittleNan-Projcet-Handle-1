@@ -58,7 +58,7 @@ public class CategoryController {
     @ApiOperation("分类修改")
     public Result<Void> updateCategory(@RequestBody CategoryDTO categoryDTO){
         log.info("分类修改：{}",categoryDTO);
-        categoryService.updateInfo(categoryDTO);
+        categoryService.update(categoryDTO);
         return Result.success();
     }
 

@@ -16,7 +16,7 @@ public interface CategoryService {
 
     public void updateStatus(Long id,Integer status);
 
-    public void updateInfo(CategoryDTO categoryDTO);
+    public void update(CategoryDTO categoryDTO);
 
     public void delete(Long id);
 

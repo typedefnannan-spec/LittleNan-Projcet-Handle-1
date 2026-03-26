@@ -16,4 +16,8 @@ public interface ShoppingCartDao {
 
     public void update(ShoppingCart shoppingCart);
 
+    public void deleteById(Long id);
+
+    public void deleteAll(Long userId);
+
 }

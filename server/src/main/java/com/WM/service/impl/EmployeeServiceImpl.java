@@ -88,7 +88,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void updateInfo(EmployeeDTO employeeDTO) {
+    public void update(EmployeeDTO employeeDTO) {
         //调用工具类转换成Employee对象
         Employee employee=new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);
