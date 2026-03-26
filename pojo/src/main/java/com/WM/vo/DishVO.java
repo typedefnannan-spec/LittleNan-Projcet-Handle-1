@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description = "传递菜品信息")
+@ApiModel(description = "传递单个菜品信息")
 public class DishVO implements Serializable {
 
     @ApiModelProperty("主键id")

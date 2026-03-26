@@ -25,8 +25,8 @@ public class CategoryController {
 
     @PostMapping
     @ApiOperation("分类插入")
-    public Result<Void> addCategory(@RequestBody CategoryDTO categoryDTO){
-        log.info("插入数据：{}",categoryDTO);
+    public Result<Void> addCategory(@RequestBody CategoryDTO categoryDTO) {
+        log.info("插入数据：{}", categoryDTO);
         categoryService.add(categoryDTO);
         return Result.success();
     }
@@ -40,32 +40,32 @@ public class CategoryController {
 
     @GetMapping("/page")
     @ApiOperation("分页查询")
-    public Result<PageResult> selectPage(CategoryPageQueryDTO categoryPageQueryDTO){
-        log.info("查询信息：{}",categoryPageQueryDTO);
-        PageResult pageResult=categoryService.selectPage(categoryPageQueryDTO);
+    public Result<PageResult> selectPage(CategoryPageQueryDTO categoryPageQueryDTO) {
+        log.info("查询信息：{}", categoryPageQueryDTO);
+        PageResult pageResult = categoryService.selectPage(categoryPageQueryDTO);
         return Result.success(pageResult);
     }
 
     @PostMapping("/status/{status}")
     @ApiOperation("状态修改")
-    public Result<Void> updateStatus(@PathVariable Integer status,Long id){
-        log.info("状态修改（分类id：{}，分类状态：{}）",id,status==1?"启用":"停用");
-        categoryService.updateStatus(id,status);
+    public Result<Void> updateStatus(@PathVariable Integer status, Long id) {
+        log.info("状态修改（分类id：{}，分类状态：{}）", id, status == 1 ? "启用" : "停用");
+        categoryService.updateStatus(id, status);
         return Result.success();
     }
 
     @PutMapping
     @ApiOperation("分类修改")
-    public Result<Void> updateCategory(@RequestBody CategoryDTO categoryDTO){
-        log.info("分类修改：{}",categoryDTO);
+    public Result<Void> updateCategory(@RequestBody CategoryDTO categoryDTO) {
+        log.info("分类修改：{}", categoryDTO);
         categoryService.update(categoryDTO);
         return Result.success();
     }
 
     @DeleteMapping
     @ApiOperation("分类删除")
-    public Result<Void> deleteCategory(Long id){
-        log.info("分类删除：{}",id);
+    public Result<Void> deleteCategory(Long id) {
+        log.info("分类删除：{}", id);
         categoryService.delete(id);
         return Result.success();
     }

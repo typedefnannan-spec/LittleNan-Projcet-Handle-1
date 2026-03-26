@@ -30,70 +30,70 @@ public class DishController {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    private void cleanRedis(String pattern){
-        Set keys=redisTemplate.keys(pattern);
+    private void cleanRedis(String pattern) {
+        Set keys = redisTemplate.keys(pattern);
         redisTemplate.delete(keys);
     }
 
     @PostMapping
     @ApiOperation("菜品新增")
-    public Result<Void> addDish(@RequestBody DishDTO dishDTO){
-        log.info("菜品新增：{}",dishDTO);
+    public Result<Void> addDish(@RequestBody DishDTO dishDTO) {
+        log.info("菜品新增：{}", dishDTO);
         dishService.add(dishDTO);
-        cleanRedis(RedisConstant.DISH_NAME_PREFIX+dishDTO.getCategoryId());
+        cleanRedis(RedisConstant.DISH_NAME_PREFIX + dishDTO.getCategoryId());
         return Result.success();
     }
 
     @GetMapping("/list")
     @ApiOperation("菜品查询（分类id）")
-    public Result<List<Dish>> selectDishBycategoryId(Long categoryId){
-        log.info("菜品查询：{}",categoryId);
-        Dish dish=new Dish();
+    public Result<List<Dish>> selectDishBycategoryId(Long categoryId) {
+        log.info("菜品查询：{}", categoryId);
+        Dish dish = new Dish();
         dish.setCategoryId(categoryId);
-        List<Dish> res=dishService.select(dish);
+        List<Dish> res = dishService.select(dish);
         return Result.success(res);
     }
 
     @GetMapping("/page")
     @ApiOperation("分页查询")
-    public Result<PageResult> selectPage(DishPageQueryDTO dishPageQueryDTO){
-        log.info("分页查询：{}",dishPageQueryDTO);
-        PageResult pageResult=dishService.selectPage(dishPageQueryDTO);
+    public Result<PageResult> selectPage(DishPageQueryDTO dishPageQueryDTO) {
+        log.info("分页查询：{}", dishPageQueryDTO);
+        PageResult pageResult = dishService.selectPage(dishPageQueryDTO);
         return Result.success(pageResult);
     }
 
     @GetMapping("/{id}")
     @ApiOperation("菜品回显（主键id）")
-    public Result<DishVO> selectDishById(@PathVariable Long id){
-        log.info("菜品回显：{}",id);
-        DishVO dishVo=dishService.selectWithFlavorById(id);
+    public Result<DishVO> selectDishById(@PathVariable Long id) {
+        log.info("菜品回显：{}", id);
+        DishVO dishVo = dishService.selectWithFlavorById(id);
         return Result.success(dishVo);
     }
 
     @PostMapping("/status/{status}")
     @ApiOperation("状态修改")
-    public Result<Void> updateStatus(@PathVariable Integer status,Long id){
-        log.info("状态修改（菜品id：{}，菜品状态：{}）",id,status==1?"起售":"停售");
-        dishService.updateStatus(id,status);
-        cleanRedis(RedisConstant.DISH_NAME_PREFIX+"*");
+    public Result<Void> updateStatus(@PathVariable Integer status, Long id) {
+        log.info("状态修改（菜品id：{}，菜品状态：{}）", id, status == 1 ? "起售" : "停售");
+        dishService.updateStatus(id, status);
+        cleanRedis(RedisConstant.DISH_NAME_PREFIX + "*");
         return Result.success();
     }
 
     @PutMapping
     @ApiOperation("菜品修改")
-    public Result<Void> updateDish(@RequestBody DishDTO dishDTO){
-        log.info("菜品修改：{}",dishDTO);
+    public Result<Void> updateDish(@RequestBody DishDTO dishDTO) {
+        log.info("菜品修改：{}", dishDTO);
         dishService.update(dishDTO);
-        cleanRedis(RedisConstant.DISH_NAME_PREFIX+"*");
+        cleanRedis(RedisConstant.DISH_NAME_PREFIX + "*");
         return Result.success();
     }
 
     @DeleteMapping
     @ApiOperation("菜品删除")
-    public Result<Void> deleteDish(@RequestParam List<Long> ids){
-        log.info("菜品删除：{}",ids);
+    public Result<Void> deleteDish(@RequestParam List<Long> ids) {
+        log.info("菜品删除：{}", ids);
         dishService.delete(ids);
-        cleanRedis(RedisConstant.DISH_NAME_PREFIX+"*");
+        cleanRedis(RedisConstant.DISH_NAME_PREFIX + "*");
         return Result.success();
     }
 

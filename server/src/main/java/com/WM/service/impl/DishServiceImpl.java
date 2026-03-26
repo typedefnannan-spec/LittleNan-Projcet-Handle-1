@@ -44,12 +44,12 @@ public class DishServiceImpl implements DishService {
     @Override
     public void add(DishDTO dishDTO) {
         //调用工具类转换成Dish对象
-        Dish dish=new Dish();
-        BeanUtils.copyProperties(dishDTO,dish);
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
         //获取菜品口味集合
-        List<DishFlavor> dishFlavorList=dishDTO.getFlavors();
+        List<DishFlavor> dishFlavorList = dishDTO.getFlavors();
         dishDao.insert(dish);
-        dishFlavorDao.insert(dishFlavorList,dish.getId());
+        dishFlavorDao.insert(dishFlavorList, dish.getId());
     }
 
     @Override
@@ -60,8 +60,8 @@ public class DishServiceImpl implements DishService {
     @Override
     public DishVO selectWithFlavorById(Long id) {
         //调用工具类转换成DishVO对象
-        DishVO dishVO=new DishVO();
-        BeanUtils.copyProperties(dishDao.selectById(id),dishVO);
+        DishVO dishVO = new DishVO();
+        BeanUtils.copyProperties(dishDao.selectById(id), dishVO);
         //设置口味信息
         dishVO.setFlavors(dishFlavorDao.select(id));
         return dishVO;
@@ -69,8 +69,8 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public List<DishVO> selectWithFlavor(Dish dish) {
-        List<Dish> dishes=dishDao.select(dish);
-        List<DishVO> dishVOS=new ArrayList<>();
+        List<Dish> dishes = dishDao.select(dish);
+        List<DishVO> dishVOS = new ArrayList<>();
         //遍历菜品
         for (Dish value : dishes) {
             //调用工具类转换成DishVO对象
@@ -86,23 +86,23 @@ public class DishServiceImpl implements DishService {
     @Override
     public PageResult selectPage(DishPageQueryDTO dishPageQueryDTO) {
         //获取DTO字段信息
-        int page=dishPageQueryDTO.getPage();
-        int pageSize=dishPageQueryDTO.getPageSize();
+        int page = dishPageQueryDTO.getPage();
+        int pageSize = dishPageQueryDTO.getPageSize();
         //使用分页插件
-        PageHelper.startPage(page,pageSize);
-        Page<DishVO> result=dishDao.selectPage(dishPageQueryDTO);
-        return new PageResult(result.getTotal(),result.getResult());
+        PageHelper.startPage(page, pageSize);
+        Page<DishVO> result = dishDao.selectPage(dishPageQueryDTO);
+        return new PageResult(result.getTotal(), result.getResult());
     }
 
     @Override
     public void updateStatus(Long id, Integer status) {
         //需要停售时需要判断是否存在套餐起售但是需要停售菜品
-        if(status==StatusConstant.DISABLE){
-            Integer count=setmealDao.countBydishId(id,StatusConstant.ENABLE);
-            if(count!=0)
+        if (status == StatusConstant.DISABLE) {
+            Integer count = setmealDao.countBydishId(id, StatusConstant.ENABLE);
+            if (count != 0)
                 throw new DeletionNotAllowedException(MessageConstant.DISH_DISABLE_FAILED);
         }
-        Dish dish=new Dish();
+        Dish dish = new Dish();
         dish.setId(id);
         dish.setStatus(status);
         dishDao.update(dish);
@@ -112,16 +112,16 @@ public class DishServiceImpl implements DishService {
     @Override
     public void update(DishDTO dishDTO) {
         //调用工具类转换成Dish对象
-        Dish dish=new Dish();
-        BeanUtils.copyProperties(dishDTO,dish);
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
         //获取口味集合
-        List<DishFlavor> dishFlavorList=dishDTO.getFlavors();
+        List<DishFlavor> dishFlavorList = dishDTO.getFlavors();
         //获取要删除的dishId
-        List<Long> ids=new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
         ids.add(dish.getId());
         dishDao.update(dish);
         dishFlavorDao.delete(ids);
-        if(!dishFlavorList.isEmpty()) dishFlavorDao.insert(dishFlavorList,dish.getId());
+        if (!dishFlavorList.isEmpty()) dishFlavorDao.insert(dishFlavorList, dish.getId());
     }
 
     @Override
@@ -135,9 +135,10 @@ public class DishServiceImpl implements DishService {
         }
         Integer flag = setmealDishDao.countBydishId(ids);
         //如果套餐包含该菜品
-        if(flag!=0)
+        if (flag != 0)
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         dishDao.delete(ids);
         dishFlavorDao.delete(ids);
     }
+
 }

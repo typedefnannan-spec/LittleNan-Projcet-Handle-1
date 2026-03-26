@@ -20,17 +20,17 @@ public class ShopController {
 
     @PutMapping("/{status}")
     @ApiOperation("状态修改")
-    public Result<Void> setStatus(@PathVariable Integer status){
-        log.info("状态修改：{}",status==1?"营业":"打烊");
-        redisTemplate.opsForValue().set(RedisConstant.SHOP_NAME,status);
+    public Result<Void> setStatus(@PathVariable Integer status) {
+        log.info("状态修改：{}", status == 1 ? "营业" : "打烊");
+        redisTemplate.opsForValue().set(RedisConstant.SHOP_NAME, status);
         return Result.success();
     }
 
     @GetMapping("/status")
     @ApiOperation("状态查询")
-    public Result<Integer> getStatus(){
-        Integer status=(Integer)redisTemplate.opsForValue().get(RedisConstant.SHOP_NAME);
-        log.info("状态查询：{}",status==1?"营业":"打烊");
+    public Result<Integer> getStatus() {
+        Integer status = (Integer) redisTemplate.opsForValue().get(RedisConstant.SHOP_NAME);
+        log.info("状态查询：{}", status == 1 ? "营业" : "打烊");
         return Result.success(status);
     }
 

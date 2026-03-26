@@ -36,7 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();
         //将密码转换成MD5加密形式
-        password=DigestUtils.md5DigestAsHex(password.getBytes());
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
         //调用Dao的查询方法
         Employee employee = employeeDao.selectByUsername(username);
         //如果账号不存在
@@ -54,8 +54,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void add(EmployeeDTO employeeDTO) {
         //调用工具类转换成Employee对象
-        Employee employee=new Employee();
-        BeanUtils.copyProperties(employeeDTO,employee);
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
         //设置其他变量
         employee.setStatus(StatusConstant.ENABLE);
         employee.setPassword(PasswordConstant.DEFAULT_PASSWORD);
@@ -70,18 +70,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public PageResult selectPage(EmployeePageQueryDTO employeePageQueryDTO) {
         //获取DTO字段信息
-        int page=employeePageQueryDTO.getPage();
-        int pageSize=employeePageQueryDTO.getPageSize();
+        int page = employeePageQueryDTO.getPage();
+        int pageSize = employeePageQueryDTO.getPageSize();
         //使用分页插件
-        PageHelper.startPage(page,pageSize);
-        Page<Employee> currPage=employeeDao.selectPage(employeePageQueryDTO);
-        return new PageResult(currPage.getTotal(),currPage.getResult());
+        PageHelper.startPage(page, pageSize);
+        Page<Employee> currPage = employeeDao.selectPage(employeePageQueryDTO);
+        return new PageResult(currPage.getTotal(), currPage.getResult());
     }
 
     @Override
-    public void updateStatus(Long id,Integer status) {
+    public void updateStatus(Long id, Integer status) {
         //转换成Employee对象
-        Employee employee=new Employee();
+        Employee employee = new Employee();
         employee.setId(id);
         employee.setStatus(status);
         employeeDao.update(employee);
@@ -90,8 +90,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void update(EmployeeDTO employeeDTO) {
         //调用工具类转换成Employee对象
-        Employee employee=new Employee();
-        BeanUtils.copyProperties(employeeDTO,employee);
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
         employeeDao.update(employee);
     }
 

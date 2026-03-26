@@ -26,16 +26,16 @@ public class CommonController {
     @PostMapping("/upload")
     @ApiOperation("文件上传")
     public Result<String> upload(MultipartFile file) {
-        log.info("文件上传：{}",file);
+        log.info("文件上传：{}", file);
         try {
-            String originName=file.getOriginalFilename();
-            String sufName=originName.substring(originName.lastIndexOf('.'));
-            String newName=UUID.randomUUID().toString()+sufName;
-            log.info("文件地址：{}",newName);
-            String returnPath=aliOssUtil.upload(file.getBytes(), newName);
+            String originName = file.getOriginalFilename();
+            String sufName = originName.substring(originName.lastIndexOf('.'));
+            String newName = UUID.randomUUID().toString() + sufName;
+            log.info("文件地址：{}", newName);
+            String returnPath = aliOssUtil.upload(file.getBytes(), newName);
             return Result.success(returnPath);
         } catch (Exception e) {
-            log.info("出现异常：{}",e.getMessage());
+            log.info("出现异常：{}", e.getMessage());
         }
         return Result.error(MessageConstant.UPLOAD_FAILED);
     }

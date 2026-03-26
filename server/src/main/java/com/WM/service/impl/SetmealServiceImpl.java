@@ -43,12 +43,12 @@ public class SetmealServiceImpl implements SetmealService {
     @Transactional
     public void add(SetmealDTO setmealDTO) {
         //调用工具类转换成Setmeal对象
-        Setmeal setmeal=new Setmeal();
-        BeanUtils.copyProperties(setmealDTO,setmeal);
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO, setmeal);
         //获取菜品集合
-        List<SetmealDish> setmealDishes=setmealDTO.getSetmealDishes();
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
         setmealDao.insert(setmeal);
-        setmealDishDao.insert(setmealDishes,setmeal.getId());
+        setmealDishDao.insert(setmealDishes, setmeal.getId());
     }
 
     @Override
@@ -59,8 +59,8 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public SetmealVO selectById(Long id) {
         //调用工具类转换成SetmealVO对象
-        SetmealVO setmealVO=new SetmealVO();
-        BeanUtils.copyProperties(setmealDao.selectById(id),setmealVO);
+        SetmealVO setmealVO = new SetmealVO();
+        BeanUtils.copyProperties(setmealDao.selectById(id), setmealVO);
         //设置包含菜品信息
         setmealVO.setSetmealDishes(setmealDishDao.selectBysetmealId(id));
         return setmealVO;
@@ -74,18 +74,18 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public PageResult selectPage(SetmealPageQueryDTO setmealPageQueryDTO) {
         //获取DTO字段信息
-        int page=setmealPageQueryDTO.getPage();
-        int pageSize=setmealPageQueryDTO.getPageSize();
+        int page = setmealPageQueryDTO.getPage();
+        int pageSize = setmealPageQueryDTO.getPageSize();
         //使用分页插件
-        PageHelper.startPage(page,pageSize);
-        Page<SetmealVO> pages=setmealDao.selectPage(setmealPageQueryDTO);
-        return new PageResult(pages.getTotal(),pages.getResult());
+        PageHelper.startPage(page, pageSize);
+        Page<SetmealVO> pages = setmealDao.selectPage(setmealPageQueryDTO);
+        return new PageResult(pages.getTotal(), pages.getResult());
     }
 
     @Override
     public void updateStatus(Long id, Integer status) {
         //判断是否存在菜品停售
-        if(status==StatusConstant.ENABLE) {
+        if (status == StatusConstant.ENABLE) {
             List<SetmealDish> setmealDishes = setmealDishDao.selectBysetmealId(id);
             for (SetmealDish setmealDish : setmealDishes) {
                 Dish dish = dishDao.selectById(setmealDish.getDishId());
@@ -93,7 +93,7 @@ public class SetmealServiceImpl implements SetmealService {
                     throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ENABLE_FAILED);
             }
         }
-        Setmeal setmeal=new Setmeal();
+        Setmeal setmeal = new Setmeal();
         setmeal.setId(id);
         setmeal.setStatus(status);
         setmealDao.update(setmeal);
@@ -102,16 +102,16 @@ public class SetmealServiceImpl implements SetmealService {
     @Override
     public void update(SetmealDTO setmealDTO) {
         //调用工具类转换成Setmeal对象
-        Setmeal setmeal=new Setmeal();
-        BeanUtils.copyProperties(setmealDTO,setmeal);
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO, setmeal);
         //获取菜品关系集合
-        List<SetmealDish> setmealDishList=setmealDTO.getSetmealDishes();
+        List<SetmealDish> setmealDishList = setmealDTO.getSetmealDishes();
         //获取要删除的套餐id
-        List<Long> ids= new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
         ids.add(setmealDTO.getId());
         setmealDao.update(setmeal);
         setmealDishDao.delete(ids);
-        setmealDishDao.insert(setmealDishList,setmeal.getId());
+        setmealDishDao.insert(setmealDishList, setmeal.getId());
     }
 
     @Override

@@ -25,9 +25,10 @@ public class CategoryController {
 
     @GetMapping("/list")
     @ApiOperation("分类查询")
-    public Result<List<Category>> selectCategory(Integer type){
-        log.info("分类查询：{}",type==null?"全部":(type==0?"菜品":"套餐"));
+    public Result<List<Category>> selectCategory(Integer type) {
+        log.info("分类查询：{}", type == null ? "全部" : (type == 0 ? "菜品" : "套餐"));
         List<Category> list = categoryService.select(type);
         return Result.success(list);
     }
+
 }

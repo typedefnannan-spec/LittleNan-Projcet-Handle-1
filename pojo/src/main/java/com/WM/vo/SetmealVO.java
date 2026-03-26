@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description = "传递套餐对象")
+@ApiModel(description = "传递单个套餐信息")
 public class SetmealVO implements Serializable {
 
     @ApiModelProperty("主键id")

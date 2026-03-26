@@ -32,12 +32,12 @@ public class LoginController {
 
     @PostMapping("/login")
     @ApiOperation("微信登录")
-    public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO){
-        log.info("微信登录：{}",userLoginDTO);
-        User user=userService.login(userLoginDTO);
+    public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO) {
+        log.info("微信登录：{}", userLoginDTO);
+        User user = userService.login(userLoginDTO);
         //创建JWT令牌
         Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.USER_ID,user.getId());
+        claims.put(JwtClaimsConstant.USER_ID, user.getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getUserSecretKey(),
                 jwtProperties.getUserTtl(),
@@ -49,4 +49,5 @@ public class LoginController {
                 .build();
         return Result.success(userLoginVO);
     }
+
 }

@@ -30,9 +30,9 @@ public class SetmealController {
 
     @GetMapping("/list")
     @ApiOperation("套餐查询")
-    @Cacheable(cacheNames = "SETMEAL",key="#categoryId")
+    @Cacheable(cacheNames = "SETMEAL", key = "#categoryId")
     public Result<List<Setmeal>> list(Long categoryId) {
-        log.info("套餐查询：{}",categoryId);
+        log.info("套餐查询：{}", categoryId);
         Setmeal setmeal = new Setmeal();
         setmeal.setCategoryId(categoryId);
         setmeal.setStatus(StatusConstant.ENABLE);
@@ -43,10 +43,9 @@ public class SetmealController {
     @GetMapping("/dish/{id}")
     @ApiOperation("菜品查询")
     public Result<List<DishItemVO>> dishList(@PathVariable Long id) {
-        log.info("菜品查询：{}",id);
+        log.info("菜品查询：{}", id);
         List<DishItemVO> list = setmealService.selectDishItemById(id);
         return Result.success(list);
     }
-
 
 }

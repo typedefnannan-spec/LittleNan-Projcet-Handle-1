@@ -7,6 +7,7 @@ import com.WM.service.AddressBookService;
 import com.WM.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class AddressBookServiceImpl implements AddressBookService {
 
     @Override
     public List<AddressBook> select(Long userId) {
-        AddressBook addressBook=new AddressBook();
+        AddressBook addressBook = new AddressBook();
         addressBook.setUserId(userId);
         return addressBookDao.select(addressBook);
     }
@@ -37,11 +38,12 @@ public class AddressBookServiceImpl implements AddressBookService {
 
     @Override
     public AddressBook selectDefault(Long UserId) {
-        AddressBook addressBook=new AddressBook();
+        AddressBook addressBook = new AddressBook();
         addressBook.setUserId(UserId);
         addressBook.setIsDefault(AddressBookConstant.DEFAULT);
-        List<AddressBook> addressBookList=addressBookDao.select(addressBook);
-        if(addressBookList.isEmpty()) return null;
+        List<AddressBook> addressBookList = addressBookDao.select(addressBook);
+        //判断是否存在默认地址
+        if (addressBookList.isEmpty()) return null;
         else return addressBookList.get(0);
     }
 
@@ -51,8 +53,9 @@ public class AddressBookServiceImpl implements AddressBookService {
     }
 
     @Override
+    @Transactional
     public void updateDefault(AddressBook addressBook) {
-        addressBookDao.updateAllDefaultByUserId(ThreadLocalUtil.getCurrentId(),AddressBookConstant.NON_DEFAULT);
+        addressBookDao.updateAllDefaultByUserId(ThreadLocalUtil.getCurrentId(), AddressBookConstant.NON_DEFAULT);
         addressBook.setIsDefault(AddressBookConstant.DEFAULT);
         addressBookDao.update(addressBook);
     }
@@ -61,4 +64,5 @@ public class AddressBookServiceImpl implements AddressBookService {
     public void deleteById(Long id) {
         addressBookDao.deleteById(id);
     }
+
 }

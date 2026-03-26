@@ -31,17 +31,17 @@ public class DishController {
 
     @GetMapping("/list")
     @ApiOperation("菜品查询（分类id）")
-    public Result<List<DishVO>> selectDishBycategoryId(Long categoryId){
-        log.info("菜品查询：{}",categoryId);
-        String key = RedisConstant.DISH_NAME_PREFIX+categoryId;
+    public Result<List<DishVO>> selectDishBycategoryId(Long categoryId) {
+        log.info("菜品查询：{}", categoryId);
+        String key = RedisConstant.DISH_NAME_PREFIX + categoryId;
         List<DishVO> object = (List<DishVO>) redisTemplate.opsForValue().get(key);
-        if(object!=null && !object.isEmpty())
+        if (object != null && !object.isEmpty())
             return Result.success(object);
         Dish dish = new Dish();
         dish.setCategoryId(categoryId);
         dish.setStatus(StatusConstant.ENABLE);
         List<DishVO> list = dishService.selectWithFlavor(dish);
-        redisTemplate.opsForValue().set(key,list);
+        redisTemplate.opsForValue().set(key, list);
         return Result.success(list);
     }
 

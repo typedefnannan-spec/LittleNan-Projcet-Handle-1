@@ -32,24 +32,23 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Transactional
     public void add(ShoppingCartDTO shoppingCartDTO) {
         //调用工具类转换成ShoppingCart对象
-        ShoppingCart shoppingCart=new ShoppingCart();
-        BeanUtils.copyProperties(shoppingCartDTO,shoppingCart);
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
         shoppingCart.setUserId(ThreadLocalUtil.getCurrentId());
-        List<ShoppingCart> shoppingCartList=shoppingCartDao.select(shoppingCart);
+        List<ShoppingCart> shoppingCartList = shoppingCartDao.select(shoppingCart);
         //判断是否存在该商品
-        if(shoppingCartList!=null && !shoppingCartList.isEmpty()){
-            ShoppingCart shoppingCart0=shoppingCartList.get(0);
-            shoppingCart0.setNumber(shoppingCart0.getNumber()+1);
+        if (shoppingCartList != null && !shoppingCartList.isEmpty()) {
+            ShoppingCart shoppingCart0 = shoppingCartList.get(0);
+            shoppingCart0.setNumber(shoppingCart0.getNumber() + 1);
             shoppingCartDao.update(shoppingCart0);
-        } else{
-            if(shoppingCartDTO.getDishId()!=null) {
-                Dish dish= dishDao.selectById(shoppingCartDTO.getDishId());
+        } else {
+            if (shoppingCartDTO.getDishId() != null) {
+                Dish dish = dishDao.selectById(shoppingCartDTO.getDishId());
                 shoppingCart.setName(dish.getName());
                 shoppingCart.setImage(dish.getImage());
                 shoppingCart.setAmount(dish.getPrice());
-            }
-            else {
-                Setmeal setmeal=setmealDao.selectById(shoppingCartDTO.getSetmealId());
+            } else {
+                Setmeal setmeal = setmealDao.selectById(shoppingCartDTO.getSetmealId());
                 shoppingCart.setName(setmeal.getName());
                 shoppingCart.setImage(setmeal.getImage());
                 shoppingCart.setAmount(setmeal.getPrice());
@@ -67,6 +66,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCart.setUserId(ThreadLocalUtil.getCurrentId());
         List<ShoppingCart> shoppingCartList = shoppingCartDao.select(shoppingCart);
         ShoppingCart shoppingCart0 = shoppingCartList.get(0);
+        //判断商品信息是否删除
         if (shoppingCart0.getNumber() == 1) shoppingCartDao.deleteById(shoppingCart0.getId());
         else {
             shoppingCart0.setNumber(shoppingCart0.getNumber() - 1);
@@ -76,7 +76,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public List<ShoppingCart> select(Long id) {
-        ShoppingCart shoppingCart=new ShoppingCart();
+        ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUserId(id);
         return shoppingCartDao.select(shoppingCart);
     }
@@ -85,4 +85,5 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void deleteAll(Long id) {
         shoppingCartDao.deleteAll(id);
     }
+
 }

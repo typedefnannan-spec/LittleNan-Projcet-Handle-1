@@ -32,50 +32,50 @@ public class AddressBookController {
 
     @PostMapping
     @ApiOperation("地址新增")
-    public Result<Void> addAdress(@RequestBody AddressBook addressBook){
-        log.info("地址新增：{}",addressBook);
+    public Result<Void> addAdress(@RequestBody AddressBook addressBook) {
+        log.info("地址新增：{}", addressBook);
         addressBookService.add(addressBook);
         return Result.success();
     }
 
     @GetMapping("/{id}")
     @ApiOperation("地址查询（id）")
-    public Result<AddressBook> selectAddresssById(Long id){
-        log.info("地址查询：{}",id);
-        AddressBook addressBook=addressBookService.selectById(id);
+    public Result<AddressBook> selectAddresssById(Long id) {
+        log.info("地址查询：{}", id);
+        AddressBook addressBook = addressBookService.selectById(id);
         return Result.success(addressBook);
     }
 
     @PutMapping
     @ApiOperation("地址修改（id）")
-    public Result<Void> updateAddress(@RequestBody AddressBook addressBook){
-        log.info("地址修改：{}",addressBook);
+    public Result<Void> updateAddress(@RequestBody AddressBook addressBook) {
+        log.info("地址修改：{}", addressBook);
         addressBookService.update(addressBook);
         return Result.success();
     }
 
     @PutMapping("/default")
     @ApiOperation("默认地址设置")
-    public Result<Void> updateDefaultAddress(@RequestBody AddressBook addressBook){
-        log.info("默认地址设置：{}",addressBook);
+    public Result<Void> updateDefaultAddress(@RequestBody AddressBook addressBook) {
+        log.info("默认地址设置：{}", addressBook);
         addressBookService.updateDefault(addressBook);
         return Result.success();
     }
 
     @DeleteMapping
     @ApiOperation("地址删除（id）")
-    public Result<Void> deleteAddressById(Long id){
-        log.info("地址删除：{}",id);
+    public Result<Void> deleteAddressById(Long id) {
+        log.info("地址删除：{}", id);
         addressBookService.deleteById(id);
         return Result.success();
     }
 
     @GetMapping("/default")
     @ApiOperation("默认地址查询")
-    public Result<AddressBook> selectDefaultAddress(){
+    public Result<AddressBook> selectDefaultAddress() {
         log.info("默认地址查询");
-        AddressBook addressBook=addressBookService.selectDefault(ThreadLocalUtil.getCurrentId());
-        if(addressBook==null) return Result.error(MessageConstant.ADDRESS_BOOK_DEFAULT_EMPTY);
+        AddressBook addressBook = addressBookService.selectDefault(ThreadLocalUtil.getCurrentId());
+        if (addressBook == null) return Result.error(MessageConstant.ADDRESS_BOOK_DEFAULT_EMPTY);
         else return Result.success(addressBook);
     }
 
