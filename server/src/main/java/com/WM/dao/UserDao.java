@@ -11,7 +11,10 @@ public interface UserDao {
 
     public void insert(User user);
 
+    @Select("select * from user where id=#{id}")
+    public User selectById(Long id);
+
     @Select("select * from user where openid=#{openid}")
-    public User selectByopenid(String openid);
+    public User selectByOpenid(String openid);
 
 }

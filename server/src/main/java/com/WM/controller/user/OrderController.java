@@ -1,8 +1,10 @@
 package com.WM.controller.user;
 
+import com.WM.dto.OrdersPaymentDTO;
 import com.WM.dto.OrdersSubmitDTO;
 import com.WM.result.Result;
 import com.WM.service.OrderService;
+import com.WM.vo.OrderPaymentVO;
 import com.WM.vo.OrderSubmitVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +27,14 @@ public class OrderController {
         log.info("订单新增：{}",ordersSubmitDTO);
         OrderSubmitVO orderSubmitVO=orderService.add(ordersSubmitDTO);
         return Result.success(orderSubmitVO);
+    }
+
+    @PutMapping("/payment")
+    @ApiOperation("订单支付")
+    public Result<OrderPaymentVO> payment(@RequestBody OrdersPaymentDTO ordersPaymentDTO) throws Exception {
+        log.info("订单支付：{}", ordersPaymentDTO);
+        OrderPaymentVO orderPaymentVO = orderService.pay(ordersPaymentDTO);
+        return Result.success(orderPaymentVO);
     }
 
 }

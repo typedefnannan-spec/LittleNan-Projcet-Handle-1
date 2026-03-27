@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         //如果openid为空
         if (openid == null)
             throw new LoginFailedException(MessageConstant.LOGIN_FAILED);
-        User user = userDao.selectByopenid(openid);
+        User user = userDao.selectByOpenid(openid);
         //如果是新用户
         if (user == null) {
             user = new User();

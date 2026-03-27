@@ -2,25 +2,25 @@ package com.WM.service.impl;
 
 import com.WM.constant.MessageConstant;
 import com.WM.constant.OrdersConstant;
-import com.WM.dao.AddressBookDao;
-import com.WM.dao.OrderDao;
-import com.WM.dao.OrderDetailDao;
-import com.WM.dao.ShoppingCartDao;
+import com.WM.dao.*;
+import com.WM.dto.OrdersPaymentDTO;
 import com.WM.dto.OrdersSubmitDTO;
-import com.WM.entity.AddressBook;
-import com.WM.entity.OrderDetail;
-import com.WM.entity.Orders;
-import com.WM.entity.ShoppingCart;
+import com.WM.entity.*;
 import com.WM.exception.AddressBookBusinessException;
+import com.WM.exception.OrderBusinessException;
 import com.WM.exception.ShoppingCartBusinessException;
 import com.WM.service.OrderService;
 import com.WM.utils.ThreadLocalUtil;
+import com.WM.utils.WeChatPayUtil;
+import com.WM.vo.OrderPaymentVO;
 import com.WM.vo.OrderSubmitVO;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +39,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ShoppingCartDao shoppingCartDao;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private WeChatPayUtil weChatPayUtil;
+
 
     @Override
     @Transactional
@@ -77,6 +84,51 @@ public class OrderServiceImpl implements OrderService {
         orderDetailDao.insert(orderDetailList);
         shoppingCartDao.deleteAll(ThreadLocalUtil.getCurrentId());
         return new OrderSubmitVO(orders.getId(), orders.getNumber(), orders.getAmount(), orders.getOrderTime());
+    }
+
+    @Override
+    public OrderPaymentVO pay(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
+        User user = userDao.selectById(ThreadLocalUtil.getCurrentId());
+//        //调用微信支付接口，生成预支付交易单
+//        JSONObject jsonObject = weChatPayUtil.pay(
+//                ordersPaymentDTO.getOrderNumber(), //商户订单号
+//                new BigDecimal(0.01), //支付金额，单位 元
+//                "小楠外卖订单", //商品描述
+//                user.getOpenid() //微信用户的openid
+//        );
+//        if (jsonObject.getString("code") != null && jsonObject.getString("code").equals("ORDERPAID")) {
+//            throw new OrderBusinessException("该订单已支付");
+//        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", "ORDERPAID");
+        OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
+        vo.setPackageStr(jsonObject.getString("package"));
+        //为替代微信支付成功后的数据库订单状态更新，多定义一个方法进行修改
+        Integer OrderPaidStatus = OrdersConstant.PAID; //支付状态，已支付
+        Integer OrderStatus = OrdersConstant.TO_BE_CONFIRMED;  //订单状态，待接单
+        //发现没有将支付时间 check_out属性赋值，所以在这里更新
+        LocalDateTime check_out_time = LocalDateTime.now();
+        //获取订单号码
+        String orderNumber = ordersPaymentDTO.getOrderNumber();
+        orderDao.updateStatus(OrderStatus, OrderPaidStatus, check_out_time, orderNumber);
+        return vo;
+//        OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
+//        vo.setPackageStr(jsonObject.getString("package"));
+//        return vo;
+    }
+
+    @Override
+    public void paySuccess(String outTradeNo) {
+        // 根据订单号查询订单
+        Orders ordersDB = orderDao.selectByNumber(outTradeNo);
+        // 根据订单id更新订单的状态、支付方式、支付状态、结账时间
+        Orders orders = Orders.builder()
+                .id(ordersDB.getId())
+                .status(OrdersConstant.TO_BE_CONFIRMED)
+                .payStatus(OrdersConstant.PAID)
+                .checkoutTime(LocalDateTime.now())
+                .build();
+        orderDao.update(orders);
     }
 
 }

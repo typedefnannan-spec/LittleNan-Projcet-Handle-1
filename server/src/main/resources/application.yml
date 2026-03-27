@@ -23,11 +23,9 @@ spring:
 
 
 mybatis:
-  #Dao 配置
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.WM.entity
   configuration:
-    #驼峰命名
     map-underscore-to-camel-case: true
 
 logging:
@@ -39,17 +37,12 @@ logging:
         controller: info
 
 jwt:
-  #JWT令牌密钥
   admin-secret-key: ${nan.admin.secret-key}
-  #过期时间
   admin-ttl: ${nan.admin.ttl}
-  #JWT请求头名字
   admin-token-name: ${nan.admin.token-name}
-  #JWT令牌密钥
+
   user-secret-key: ${nan.user.secret-key}
-  #过期时间
   user-ttl: ${nan.user.ttl}
-  #JWT请求头名字
   user-token-name: ${nan.user.token-name}
 
 
@@ -62,3 +55,10 @@ alioss:
 wechat:
   appid: ${nan.wechat.appid}
   secret: ${nan.wechat.secret}
+  mchid: ${nan.wechat.mchid}
+  mchSerialNo: ${nan.wechat.mchSerialNo}
+  privateKeyFilePath: ${nan.wechat.privateKeyFilePath}
+  apiV3Key: ${nan.wechat.apiV3Key}
+  weChatPayCertFilePath: ${nan.wechat.weChatPayCertFilePath}
+  notifyUrl: ${nan.wechat.notifyUrl}
+  refundNotifyUrl: ${nan.wechat.refundNotifyUrl}
