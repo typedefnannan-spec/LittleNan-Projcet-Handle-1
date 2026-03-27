@@ -12,6 +12,8 @@ public interface ShoppingCartDao {
 
     public void insert(ShoppingCart shoppingCart);
 
+    public void insertList(List<ShoppingCart> shoppingCartList);
+
     public List<ShoppingCart> select(ShoppingCart shoppingCart);
 
     public void update(ShoppingCart shoppingCart);

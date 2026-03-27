@@ -8,15 +8,15 @@ import com.WM.result.PageResult;
 
 public interface EmployeeService {
 
-    Employee login(EmployeeLoginDTO employeeLoginDTO);
+    public Employee login(EmployeeLoginDTO employeeLoginDTO);
 
-    void add(EmployeeDTO employeeAddDTO);
+    public void add(EmployeeDTO employeeAddDTO);
 
-    Employee select(Long id);
+    public Employee select(Long id);
 
-    PageResult selectPage(EmployeePageQueryDTO employeePageQueryDTO);
+    public PageResult selectPage(EmployeePageQueryDTO employeePageQueryDTO);
 
-    void updateStatus(Long id,Integer status);
+    public void updateStatus(Long id,Integer status);
 
-    void update(EmployeeDTO employeeDTO);
+    public void update(EmployeeDTO employeeDTO);
 }
