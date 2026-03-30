@@ -14,4 +14,9 @@ public class OrdersConstant {
     public static final Integer UN_PAID = 0;
     public static final Integer PAID = 1;
     public static final Integer REFUND = 2;
+
+    //提醒（1：来单提醒，2：用户催单）
+    public static final Integer HAVE_NEW_ORDER=1;
+    public static final Integer USER_REMINDER=2;
+
 }

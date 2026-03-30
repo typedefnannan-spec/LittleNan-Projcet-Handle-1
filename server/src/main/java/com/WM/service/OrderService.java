@@ -37,4 +37,6 @@ public interface OrderService {
 
     public void complete(Long id);
 
+    public void reminder(Long id);
+
 }

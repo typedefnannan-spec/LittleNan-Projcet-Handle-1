@@ -1,5 +1,6 @@
 package com.WM.service.impl;
 
+import com.WM.WebSocket.WebSocketServer;
 import com.WM.constant.MessageConstant;
 import com.WM.constant.OrdersConstant;
 import com.WM.dao.*;
@@ -21,6 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -55,6 +58,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private WeChatPayUtil weChatPayUtil;
 
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Override
     @Transactional
@@ -187,6 +192,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderPaymentVO pay(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
+        log.info("用户下单");
         User user = userDao.selectById(ThreadLocalUtil.getCurrentId());
 //        //调用微信支付接口，生成预支付交易单
 //        JSONObject jsonObject = weChatPayUtil.pay(
@@ -203,25 +209,15 @@ public class OrderServiceImpl implements OrderService {
         OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
         vo.setPackageStr(jsonObject.getString("package"));
         //为替代微信支付成功后的数据库订单状态更新，多定义一个方法进行修改
-        Integer OrderPaidStatus = OrdersConstant.PAID; //支付状态，已支付
-        Integer OrderStatus = OrdersConstant.TO_BE_CONFIRMED;  //订单状态，待接单
         //发现没有将支付时间 check_out属性赋值，所以在这里更新
         LocalDateTime check_out_time = LocalDateTime.now();
-        //获取订单号码
-        String orderNumber = ordersPaymentDTO.getOrderNumber();
-        orderDao.updateStatus(OrderStatus, OrderPaidStatus, check_out_time, orderNumber);
-
-        //网上找的催单
-//        Map map = new HashMap();
-//        map.put("type", 1);// 消息类型，1表示来单提醒
-//        //获取订单id
-//        Orders orders=orderMapper.getByNumberAndUserId(orderNumber, userId);
-//        map.put("orderId", orders.getId());
-//        map.put("content", "订单号：" + orderNumber);
-//        // 通过WebSocket实现来单提醒，向客户端浏览器推送消息
-//        webSocketServer.sendToAllClient(JSON.toJSONString(map));
-
-
+        orderDao.updateStatus(OrdersConstant.TO_BE_CONFIRMED, OrdersConstant.PAID, check_out_time, ordersPaymentDTO.getOrderNumber());
+        Map map = new HashMap();
+        map.put("type", OrdersConstant.HAVE_NEW_ORDER);
+        map.put("orderId", ThreadLocalUtil.getCurrentId());
+        map.put("content", "订单号：" + ordersPaymentDTO.getOrderNumber());
+        // 通过WebSocket实现来单提醒，向客户端浏览器推送消息
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
         return vo;
 //        OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
 //        vo.setPackageStr(jsonObject.getString("package"));
@@ -338,6 +334,20 @@ public class OrderServiceImpl implements OrderService {
         orders.setStatus(OrdersConstant.COMPLETED);
         orders.setDeliveryTime(LocalDateTime.now());
         orderDao.update(orders);
+    }
+
+    @Override
+    public void reminder(Long id) {
+        log.info("用户催单");
+        Orders ordersDB = orderDao.selectById(id);
+        //校验订单是否存在
+        if (ordersDB == null)
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        Map map = new HashMap();
+        map.put("type", OrdersConstant.USER_REMINDER);
+        map.put("orderId", id);
+        map.put("content", "订单号：" + ordersDB.getNumber());
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 
     private List<OrderVO> getOrderVOList(Page<Orders> page) {

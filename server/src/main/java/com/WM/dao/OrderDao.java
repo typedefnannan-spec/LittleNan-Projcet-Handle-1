@@ -3,6 +3,7 @@ package com.WM.dao;
 import com.WM.dto.OrdersPageQueryDTO;
 import com.WM.entity.Orders;
 import com.github.pagehelper.Page;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -27,6 +28,9 @@ public interface OrderDao {
 
     @Select("select * from orders where status=#{status} and order_time<#{orderTime}")
     List<Orders> selectByStatusAndOrderTime(Integer status,LocalDateTime orderTime);
+
+    @Select("select * from orders where number=#{number} and user_id=#{userId}")
+    Orders selectByNumberAndUserId(String number,Long userId);
 
     public void update(Orders orders);
 

@@ -1,10 +1,12 @@
 package com.WM.controller.user;
 
+import com.WM.constant.OrdersConstant;
 import com.WM.dto.OrdersPaymentDTO;
 import com.WM.dto.OrdersSubmitDTO;
 import com.WM.result.PageResult;
 import com.WM.result.Result;
 import com.WM.service.OrderService;
+import com.WM.utils.ThreadLocalUtil;
 import com.WM.vo.OrderPaymentVO;
 import com.WM.vo.OrderSubmitVO;
 import com.WM.vo.OrderVO;
@@ -13,6 +15,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController("userOrderController")
 @RequestMapping("/user/order")
@@ -68,6 +73,14 @@ public class OrderController {
         log.info("订单支付：{}", ordersPaymentDTO);
         OrderPaymentVO orderPaymentVO = orderService.pay(ordersPaymentDTO);
         return Result.success(orderPaymentVO);
+    }
+
+    @GetMapping("/reminder/{id}")
+    @ApiOperation("用户催单")
+    public Result<Void> reminder(@PathVariable Long id){
+        log.info("用户催单：{}",id);
+        orderService.reminder(id);
+        return Result.success();
     }
 
 }
