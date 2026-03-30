@@ -7,8 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+import org.aspectj.weaver.ast.Or;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 public interface OrderDao {
@@ -22,6 +24,9 @@ public interface OrderDao {
     public Orders selectById(Long id);
 
     public Page<Orders> selectPage(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    @Select("select * from orders where status=#{status} and order_time<#{orderTime}")
+    List<Orders> selectByStatusAndOrderTime(Integer status,LocalDateTime orderTime);
 
     public void update(Orders orders);
 
